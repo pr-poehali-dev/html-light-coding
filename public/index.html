@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Кофейня Уют</title>
+    <!-- Подключаем наш файл со стилями -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Подключаем шрифты Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ============================
+         ШАПКА САЙТА
+         ============================ -->
+    <header>
+        <!-- Логотип: SVG-иконка + название -->
+        <a href="#hero" class="logo">
+            <!-- SVG логотип нарисован вручную -->
+            <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="20" cy="20" r="20" fill="#C17F4A"/>
+                <path d="M11 27 Q15 17 20 22 Q25 27 29 15"
+                      stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                <ellipse cx="20" cy="30" rx="8" ry="2.2" fill="white" opacity="0.25"/>
+                <path d="M26 11 Q29 9 31 11" stroke="white" stroke-width="1.5"
+                      stroke-linecap="round" fill="none"/>
+            </svg>
+            <span class="logo-text">Уют</span>
+        </a>
+
+        <!-- Навигация по страницам -->
+        <nav>
+            <ul>
+                <li><a href="#catalog"   class="nav-link">Наше меню</a></li>
+                <li><a href="#masterclass" class="nav-link">Мастер-классы</a></li>
+                <li><a href="#order"     class="nav-link">Оформить заказ</a></li>
+                <li><a href="#contacts"  class="nav-link">Контакты</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+    <!-- ============================
+         ГЛАВНЫЙ БАННЕР (HERO)
+         ============================ -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <p>добро пожаловать</p>
+            <h1>Кофейня<br><span>Уют</span></h1>
+            <p class="subtitle">Место, где каждая чашка — маленький праздник</p>
+            <div class="hero-buttons">
+                <a href="#catalog" class="btn-main">☕ Твой кофе ждёт!</a>
+                <a href="#order"   class="btn-outline">🪑 Столик в один клик!</a>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ============================
+         СЛАЙДЕР — Акции и новинки
+         ============================ -->
+    <section class="slider-section fade-section" id="slider">
+        <h2 class="section-title">Акции и новинки</h2>
+        <p class="section-subtitle">Специальные предложения этого сезона</p>
+
+        <div class="slider-wrapper">
+
+            <!-- Слайд 1 -->
+            <div class="slide active"
+                 style="background-image: url('https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/8986274b-25e2-4952-bd6a-eae17d05349b.jpg')">
+                <div class="slide-text">
+                    <h3>Авторский Espresso Tonic</h3>
+                    <p>Наш фирменный напиток — эспрессо на тоническом лимонаде с тимьяном и апельсиновой цедрой.</p>
+                </div>
+            </div>
+
+            <!-- Слайд 2 -->
+            <div class="slide"
+                 style="background-image: url('https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/37ccf19b-07c3-4fa0-8922-b4c4d8edd2a1.jpg')">
+                <div class="slide-text">
+                    <h3>Завтрак в Уюте</h3>
+                    <p>Круассан с лососем, кофе на выбор и свежевыжатый сок — идеальное начало дня.</p>
+                </div>
+            </div>
+
+            <!-- Слайд 3 -->
+            <div class="slide"
+                 style="background-image: url('https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/6b8d3310-b239-4068-b90d-0a8eed664a68.jpg')">
+                <div class="slide-text">
+                    <h3>Мастер-классы по латте-арт</h3>
+                    <p>Научитесь рисовать кофейные шедевры вместе с нашими опытными бариста.</p>
+                </div>
+            </div>
+
+            <!-- Кнопки «влево» и «вправо» -->
+            <button class="slider-btn prev" onclick="changeSlide(-1)">&#8249;</button>
+            <button class="slider-btn next" onclick="changeSlide(1)">&#8250;</button>
+        </div>
+
+        <!-- Точки навигации слайдера -->
+        <div class="slider-dots">
+            <button class="dot active" onclick="goToSlide(0)"></button>
+            <button class="dot"        onclick="goToSlide(1)"></button>
+            <button class="dot"        onclick="goToSlide(2)"></button>
+        </div>
+    </section>
+
+
+    <!-- ============================
+         КАТАЛОГ (МЕНЮ С ФИЛЬТРОМ)
+         ============================ -->
+    <section class="catalog-section fade-section" id="catalog">
+        <h2 class="section-title">КАТАЛОГ</h2>
+        <p class="section-subtitle">Отборные сорта кофе и свежая выпечка собственного производства</p>
+
+        <!-- Два фото рядом -->
+        <div class="catalog-photos">
+            <img src="https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/8986274b-25e2-4952-bd6a-eae17d05349b.jpg"
+                 alt="Кофе">
+            <img src="https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/37ccf19b-07c3-4fa0-8922-b4c4d8edd2a1.jpg"
+                 alt="Выпечка">
+        </div>
+
+        <!-- Кнопки фильтра по категориям -->
+        <div class="filter-buttons">
+            <button class="filter-btn active" onclick="filterMenu('all')">☕🥐 Всё</button>
+            <button class="filter-btn" onclick="filterMenu('coffee')">☕ Кофе</button>
+            <button class="filter-btn" onclick="filterMenu('pastry')">🥐 Выпечка</button>
+            <button class="filter-btn" onclick="filterMenu('tea')">🍵 Чай и напитки</button>
+        </div>
+
+        <!-- Карточки меню -->
+        <!-- Атрибут data-category нужен для фильтра -->
+        <div class="menu-grid">
+
+            <!-- Кофе -->
+            <div class="menu-card" data-category="coffee">
+                <h3>Эспрессо</h3>
+                <p>Классический крепкий кофе</p>
+                <div class="price">120 ₽</div>
+                <button class="btn-add">+ Добавить в заказ</button>
+            </div>
+
+            <div class="menu-card" data-category="coffee">
+                <h3>Капучино</h3>
+                <p>Нежный кофе с молочной пенкой</p>
+                <div class="price">190 ₽</div>
+                <button class="btn-add">+ Добавить в заказ</button>
+            </div>
+
+            <div class="menu-card" data-category="coffee">
+                <h3>Латте</h3>
+                <p>Мягкий кофе с молоком</p>
+                <div class="price">210 ₽</div>
+                <button class="btn-add">+ Добавить в заказ</button>
+            </div>
+
+            <div class="menu-card" data-category="coffee">
+                <h3>Американо</h3>
+                <p>Нежный разбавленный эспрессо</p>
+                <div class="price">150 ₽</div>
+                <button class="btn-add">+ Добавить в заказ</button>
+            </div>
+
+            <div class="menu-card" data-category="coffee">
+                <h3>Раф</h3>
+                <p>Сливочный кофе с ванилью</p>
+                <div class="price">230 ₽</div>
+                <button class="btn-add">+ Добавить в заказ</button>
+            </div>
+
+            <div class="menu-card" data-category="coffee">
+                <h3>Флэт Уайт</h3>
+                <p>Двойной эспрессо с бархатной пенкой</p>
+                <div class="price">200 ₽</div>
+                <button class="btn-add">+ Добавить в заказ</button>
+            </div>
+
+            <!-- Выпечка -->
+            <div class="menu-card" data-category="pastry">
+                <h3>Круассан</h3>
+                <p>Нежный французский круассан</p>
+                <div class="price">90 ₽</div>
+                <button class="btn-add">+ Добавить в заказ</button>
+            </div>
+
+            <div class="menu-card" data-category="pastry">
+                <h3>Булочка с корицей</h3>
+                <p>Пропитанная сладкая булочка</p>
+                <div class="price">110 ₽</div>
+                <button class="btn-add">+ Добавить в заказ</button>
+            </div>
+
+            <div class="menu-card" data-category="pastry">
+                <h3>Чизкейк</h3>
+                <p>Нежный голландский десерт</p>
+                <div class="price">230 ₽</div>
+                <button class="btn-add">+ Добавить в заказ</button>
+            </div>
+
+            <div class="menu-card" data-category="pastry">
+                <h3>Брауни</h3>
+                <p>Шоколадный торт с грецкими орехами</p>
+                <div class="price">90 ₽</div>
+                <button class="btn-add">+ Добавить в заказ</button>
+            </div>
+
+            <div class="menu-card" data-category="pastry">
+                <h3>Эклер</h3>
+                <p>Пирожное с кремом и глазурью</p>
+                <div class="price">140 ₽</div>
+                <button class="btn-add">+ Добавить в заказ</button>
+            </div>
+
+            <div class="menu-card" data-category="pastry">
+                <h3>Штрудель</h3>
+                <p>Тянутое тесто с яблочной начинкой</p>
+                <div class="price">240 ₽</div>
+                <button class="btn-add">+ Добавить в заказ</button>
+            </div>
+
+            <!-- Чай и напитки -->
+            <div class="menu-card" data-category="tea">
+                <h3>Чай Earl Grey</h3>
+                <p>Классический английский чай с бергамотом</p>
+                <div class="price">100 ₽</div>
+                <button class="btn-add">+ Добавить в заказ</button>
+            </div>
+
+            <div class="menu-card" data-category="tea">
+                <h3>Зелёный чай</h3>
+                <p>Мягкий японский сенча</p>
+                <div class="price">90 ₽</div>
+                <button class="btn-add">+ Добавить в заказ</button>
+            </div>
+
+            <div class="menu-card" data-category="tea">
+                <h3>Ромашковый</h3>
+                <p>Успокаивающий травяной напиток</p>
+                <div class="price">85 ₽</div>
+                <button class="btn-add">+ Добавить в заказ</button>
+            </div>
+
+            <div class="menu-card" data-category="tea">
+                <h3>Ягодный морс</h3>
+                <p>Свежий напиток из лесных ягод</p>
+                <div class="price">130 ₽</div>
+                <button class="btn-add">+ Добавить в заказ</button>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ============================
+         БРОНИРОВАНИЕ СТОЛИКА
+         ============================ -->
+    <section class="booking-section fade-section" id="booking">
+        <h2 class="section-title">Забронируйте столик</h2>
+        <p class="section-subtitle">При бронировании на будний день — комплимент от шеф-кондитера в подарок!</p>
+
+        <div class="booking-grid">
+
+            <!-- Форма бронирования -->
+            <div class="booking-form">
+
+                <!-- Сообщение об успехе (скрыто по умолчанию) -->
+                <div class="success-msg" id="booking-success">
+                    <span class="emoji">🎉</span>
+                    <h3>Столик забронирован!</h3>
+                    <p>Ждём вас. Комплимент уже готовится!</p>
+                </div>
+
+                <!-- Сама форма -->
+                <form id="booking-form" onsubmit="submitBooking(event)">
+                    <div class="form-group">
+                        <label for="booking-name">Ваше ФИО</label>
+                        <input type="text" id="booking-name" placeholder="Иванов Иван Иванович" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="booking-phone">Телефон</label>
+                        <input type="tel" id="booking-phone" placeholder="+7 (___) ___-__-__" required>
+                    </div>
+
+                    <!-- Дата и время в одну строку -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="booking-date">Дата</label>
+                            <input type="date" id="booking-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="booking-time">Время</label>
+                            <input type="time" id="booking-time" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="booking-guests">Количество гостей</label>
+                        <select id="booking-guests" required>
+                            <option value="">Выберите...</option>
+                            <option value="1">1 гость</option>
+                            <option value="2">2 гостя</option>
+                            <option value="3">3 гостя</option>
+                            <option value="4">4 гостя</option>
+                            <option value="5">5 гостей</option>
+                            <option value="6">6 гостей</option>
+                            <option value="7">7 гостей</option>
+                            <option value="8">8 гостей</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Забронировать столик</button>
+                </form>
+            </div>
+
+            <!-- Преимущества бронирования -->
+            <div class="booking-benefits">
+
+                <div class="benefit-card">
+                    <span class="benefit-icon">🎁</span>
+                    <div>
+                        <h4>Комплимент в подарок</h4>
+                        <p>При бронировании на будний день — выпечка от шеф-кондитера</p>
+                    </div>
+                </div>
+
+                <div class="benefit-card">
+                    <span class="benefit-icon">☕</span>
+                    <div>
+                        <h4>Свежий кофе</h4>
+                        <p>Зерна обжариваются еженедельно для максимального вкуса</p>
+                    </div>
+                </div>
+
+                <div class="benefit-card">
+                    <span class="benefit-icon">🏠</span>
+                    <div>
+                        <h4>Домашняя выпечка</h4>
+                        <p>Готовим каждый день — никаких заморозок</p>
+                    </div>
+                </div>
+
+                <div class="benefit-card">
+                    <span class="benefit-icon">☀️</span>
+                    <div>
+                        <h4>Уютная атмосфера</h4>
+                        <p>Место, где хочется остаться подольше</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ============================
+         ОФОРМИТЬ ЗАКАЗ
+         ============================ -->
+    <section class="order-section fade-section" id="order">
+        <h2 class="section-title">Оформить заказ</h2>
+        <p class="section-subtitle">Выберите параметры, добавьте позиции из меню и оформите</p>
+
+        <div class="order-box">
+
+            <!-- Выбор типа заказа -->
+            <div class="order-type">
+                <button class="type-btn active" id="btn-pickup" onclick="selectOrderType('pickup')">
+                    <span class="type-icon">🛍️</span>
+                    <span class="type-name">С собой</span>
+                    <span class="type-sub">Заберите сами</span>
+                </button>
+                <button class="type-btn" id="btn-delivery" onclick="selectOrderType('delivery')">
+                    <span class="type-icon">🚴</span>
+                    <span class="type-name">Доставка</span>
+                    <span class="type-sub">Курьер привезёт</span>
+                </button>
+            </div>
+
+            <!-- Поля ввода -->
+            <div class="order-inputs">
+                <input type="text"  placeholder="Ваше имя">
+                <input type="tel"   placeholder="+7(___) ___-__-__">
+            </div>
+
+            <!-- Блок информации о доставке (появляется при выборе "Доставка") -->
+            <div class="delivery-info" id="delivery-info">
+                <h4>🚴 Доставка и способы оплаты</h4>
+                <div class="delivery-grid">
+                    <div class="delivery-item">
+                        <span class="d-icon">📍</span>
+                        <p><strong>Доставка по городу</strong>от 199 ₽, бесплатно при заказе от 1500 ₽</p>
+                    </div>
+                    <div class="delivery-item">
+                        <span class="d-icon">⏰</span>
+                        <p><strong>Время доставки</strong>30–60 минут в зависимости от адреса</p>
+                    </div>
+                    <div class="delivery-item">
+                        <span class="d-icon">💳</span>
+                        <p><strong>Банковская карта</strong>Visa, Mastercard, МИР — онлайн или курьеру</p>
+                    </div>
+                    <div class="delivery-item">
+                        <span class="d-icon">📱</span>
+                        <p><strong>СБП и Pay-сервисы</strong>Apple Pay, Google Pay, SberPay</p>
+                    </div>
+                    <div class="delivery-item">
+                        <span class="d-icon">💵</span>
+                        <p><strong>Наличными</strong>Курьеру при получении, сдача до 5000 ₽</p>
+                    </div>
+                    <div class="delivery-item">
+                        <span class="d-icon">🛍️</span>
+                        <p><strong>С собой</strong>Готовим к вашему приходу за 10–15 мин</p>
+                    </div>
+                </div>
+            </div>
+
+            <a href="#catalog" class="btn-main" style="display: block; text-align: center; margin-top: 0;">
+                Перейти к меню и выбрать позиции →
+            </a>
+
+        </div>
+    </section>
+
+
+    <!-- ============================
+         МАСТЕР-КЛАССЫ
+         ============================ -->
+    <section class="masterclass-section fade-section" id="masterclass">
+
+        <!-- Верхний блок: текст слева, фото справа -->
+        <div class="mc-intro">
+            <div class="mc-intro-text">
+                <span class="label">мастер-классы</span>
+                <h2>Научитесь<br><span>латте-арт</span></h2>
+                <p>Наши бариста с опытом 10+ лет научат вас создавать настоящие кофейные шедевры. Весело, полезно и очень вкусно.</p>
+                <a href="#masterclass" class="btn-main">Все мастер-классы</a>
+            </div>
+            <div class="mc-intro-photo">
+                <img src="https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/6b8d3310-b239-4068-b90d-0a8eed664a68.jpg"
+                     alt="Латте-арт">
+            </div>
+        </div>
+
+        <!-- Три карточки мастер-классов -->
+        <div class="mc-grid">
+
+            <div class="mc-card">
+                <img src="https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/6b8d3310-b239-4068-b90d-0a8eed664a68.jpg"
+                     alt="Базовый латте-арт">
+                <div class="mc-card-body">
+                    <span class="mc-level">Начинающий</span>
+                    <h3>Базовый латте-арт</h3>
+                    <p>Научитесь рисовать простые узоры. Подходит для начинающих.</p>
+                    <div class="mc-footer">
+                        <span class="mc-price">2 500 ₽</span>
+                        <button class="btn-signup">Записаться</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mc-card">
+                <img src="https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/8986274b-25e2-4952-bd6a-eae17d05349b.jpg"
+                     alt="Продвинутый латте-арт">
+                <div class="mc-card-body">
+                    <span class="mc-level">Продвинутый</span>
+                    <h3>Продвинутый латте-арт</h3>
+                    <p>Сложные узоры. Настоящий профессиональный опыт.</p>
+                    <div class="mc-footer">
+                        <span class="mc-price">3 500 ₽</span>
+                        <button class="btn-signup">Записаться</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mc-card">
+                <img src="https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/37ccf19b-07c3-4fa0-8922-b4c4d8edd2a1.jpg"
+                     alt="Кофе от зерна до чашки">
+                <div class="mc-card-body">
+                    <span class="mc-level">Все уровни</span>
+                    <h3>Кофе от зерна до чашки</h3>
+                    <p>Обжарка, помол, заваривание. Полное погружение.</p>
+                    <div class="mc-footer">
+                        <span class="mc-price">4 200 ₽</span>
+                        <button class="btn-signup">Записаться</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ============================
+         КОНТАКТЫ
+         ============================ -->
+    <section class="fade-section" id="contacts" style="background-color: #faf4ea;">
+        <h2 class="section-title">Контакты</h2>
+        <p class="section-subtitle">Приходите — всегда рады гостям!</p>
+
+        <!-- Используем grid из двух колонок: список контактов + карта-заглушка -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 900px; margin: 0 auto;">
+
+            <!-- Список контактов -->
+            <div style="display: flex; flex-direction: column; gap: 15px;">
+
+                <div class="benefit-card">
+                    <span class="benefit-icon">📍</span>
+                    <div>
+                        <h4 style="font-size: 11px; color: #8b6040; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Адрес</h4>
+                        <p style="color: #3e1f00; font-size: 14px; margin-top: 3px;">ул. Кофейная, 15, 2 этаж</p>
+                    </div>
+                </div>
+
+                <div class="benefit-card">
+                    <span class="benefit-icon">🕐</span>
+                    <div>
+                        <h4 style="font-size: 11px; color: #8b6040; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Режим работы</h4>
+                        <p style="color: #3e1f00; font-size: 14px; margin-top: 3px;">Пн–Пт: 8:00–22:00<br>Сб–Вс: 9:00–23:00</p>
+                    </div>
+                </div>
+
+                <div class="benefit-card">
+                    <span class="benefit-icon">📞</span>
+                    <div>
+                        <h4 style="font-size: 11px; color: #8b6040; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Телефон</h4>
+                        <p style="color: #3e1f00; font-size: 14px; margin-top: 3px;">+7 (999) 999-99-99</p>
+                    </div>
+                </div>
+
+                <div class="benefit-card">
+                    <span class="benefit-icon">✉️</span>
+                    <div>
+                        <h4 style="font-size: 11px; color: #8b6040; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Email</h4>
+                        <p style="color: #3e1f00; font-size: 14px; margin-top: 3px;">hello@coffee-uyt.ru</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Заглушка карты -->
+            <div style="background: linear-gradient(135deg, #f5ecd7, #edd9b8); border-radius: 20px; display: flex; align-items: center; justify-content: center; min-height: 320px;">
+                <div style="text-align: center; padding: 30px;">
+                    <div style="font-size: 60px; margin-bottom: 15px;">📍</div>
+                    <p style="font-family: Georgia, serif; font-size: 20px; font-weight: bold; color: #3e1f00; margin-bottom: 8px;">Кофейня Уют</p>
+                    <p style="color: #6b3a2a; font-family: Arial, sans-serif; font-size: 14px;">ул. Кофейная, 15</p>
+                    <p style="color: #8b6040; font-family: Arial, sans-serif; font-size: 12px; margin-top: 6px;">Центр города · 2 этаж</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ============================
+         ПОДВАЛ
+         ============================ -->
+    <footer>
+        <div class="footer-grid">
+
+            <div>
+                <div class="footer-logo">
+                    <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
+                        <circle cx="20" cy="20" r="20" fill="#C17F4A"/>
+                        <path d="M11 27 Q15 17 20 22 Q25 27 29 15"
+                              stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                    </svg>
+                    <span class="footer-logo-text">Уют</span>
+                </div>
+                <p class="footer-desc">Приходите к нам за чашечкой ароматного кофе</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Режим работы</h4>
+                <p>Пн–Пт: 8:00–22:00<br>Сб–Вс: 9:00–23:00</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Телефон</h4>
+                <p>+7 (999) 999-99-99</p>
+            </div>
+
+            <div class="footer-col">
+                <h4>Контакты</h4>
+                <p>hello@coffee-uyt.ru</p>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2024 Кофейня Уют. Все права защищены.</p>
+        </div>
+    </footer>
+
+
+    <!-- ============================
+         КНОПКА "НАВЕРХ"
+         ============================ -->
+    <button id="btn-top" onclick="scrollToTop()" title="Наверх">↑</button>
+
+
+    <!-- ============================
+         JAVASCRIPT
+         Весь код в одном месте,
+         в конце файла — это правило хорошего тона
+         ============================ -->
+    <script>
+
+        // ===== СЛАЙДЕР =====
+
+        // Текущий индекс активного слайда (начинаем с 0)
+        var currentSlide = 0;
+
+        // Получаем все слайды и точки
+        var slides = document.querySelectorAll('.slide');
+        var dots   = document.querySelectorAll('.dot');
+
+        // Переключить на конкретный слайд по индексу
+        function goToSlide(index) {
+            // Убираем класс active у текущего слайда и точки
+            slides[currentSlide].classList.remove('active');
+            dots[currentSlide].classList.remove('active');
+
+            // Запоминаем новый индекс
+            currentSlide = index;
+
+            // Если вышли за границы — зацикливаем
+            if (currentSlide < 0) currentSlide = slides.length - 1;
+            if (currentSlide >= slides.length) currentSlide = 0;
+
+            // Добавляем active новому слайду и точке
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+
+        // Сдвинуть слайдер на direction (+1 или -1)
+        function changeSlide(direction) {
+            goToSlide(currentSlide + direction);
+        }
+
+        // Автоматическое переключение каждые 4 секунды
+        setInterval(function() {
+            changeSlide(1);
+        }, 4000);
+
+
+        // ===== ФИЛЬТР МЕНЮ =====
+
+        function filterMenu(category) {
+            // Получаем все карточки меню
+            var cards   = document.querySelectorAll('.menu-card');
+            var buttons = document.querySelectorAll('.filter-btn');
+
+            // Убираем active у всех кнопок фильтра
+            buttons.forEach(function(btn) {
+                btn.classList.remove('active');
+            });
+
+            // Добавляем active нажатой кнопке
+            // Ищем кнопку, которая вызвала нужную категорию
+            buttons.forEach(function(btn) {
+                if (btn.getAttribute('onclick') === "filterMenu('" + category + "')") {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Показываем или скрываем карточки по категории
+            cards.forEach(function(card) {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.classList.remove('hidden');
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+        }
+
+
+        // ===== ФОРМА БРОНИРОВАНИЯ =====
+
+        function submitBooking(event) {
+            // Отменяем стандартную отправку формы (без перезагрузки!)
+            event.preventDefault();
+
+            // Прячем форму
+            document.getElementById('booking-form').style.display = 'none';
+
+            // Показываем сообщение об успехе
+            document.getElementById('booking-success').style.display = 'block';
+
+            // Через 4 секунды возвращаем форму обратно
+            setTimeout(function() {
+                document.getElementById('booking-form').style.display = 'block';
+                document.getElementById('booking-success').style.display = 'none';
+                document.getElementById('booking-form').reset();
+            }, 4000);
+        }
+
+
+        // ===== ВЫБОР ТИПА ЗАКАЗА =====
+
+        function selectOrderType(type) {
+            // Убираем active у обеих кнопок
+            document.getElementById('btn-pickup').classList.remove('active');
+            document.getElementById('btn-delivery').classList.remove('active');
+
+            // Добавляем active нужной кнопке
+            document.getElementById('btn-' + type).classList.add('active');
+
+            // Показываем или скрываем блок с информацией о доставке
+            var deliveryInfo = document.getElementById('delivery-info');
+            if (type === 'delivery') {
+                deliveryInfo.style.display = 'block';
+            } else {
+                deliveryInfo.style.display = 'none';
+            }
+        }
+
+
+        // ===== КНОПКА "НАВЕРХ" =====
+
+        // Показываем кнопку, когда прокрутили страницу вниз на 400px
+        window.onscroll = function() {
+            var btnTop = document.getElementById('btn-top');
+            if (document.documentElement.scrollTop > 400) {
+                btnTop.style.display = 'block';
+            } else {
+                btnTop.style.display = 'none';
+            }
+        };
+
+        // Плавно прокручиваем страницу наверх
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+
+        // ===== АНИМАЦИЯ ПОЯВЛЕНИЯ СЕКЦИЙ =====
+        // Используем IntersectionObserver — он следит, когда элемент попал в область видимости
+
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    // Элемент виден — добавляем класс visible
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 }); // срабатывает когда 10% элемента видно
+
+        // Вешаем наблюдатель на все секции с классом fade-section
+        document.querySelectorAll('.fade-section').forEach(function(section) {
+            observer.observe(section);
+        });
+
+
+        // ===== АНИМАЦИЯ НАВИГАЦИИ =====
+        // Подсвечиваем ссылку навигации при прокрутке
+
+        window.addEventListener('scroll', function() {
+            var sections = document.querySelectorAll('section[id]');
+            var navLinks = document.querySelectorAll('.nav-link');
+
+            sections.forEach(function(section) {
+                var top    = section.getBoundingClientRect().top;
+                var bottom = section.getBoundingClientRect().bottom;
+
+                if (top <= 80 && bottom > 80) {
+                    // Убираем active у всех ссылок
+                    navLinks.forEach(function(link) { link.classList.remove('active'); });
+
+                    // Добавляем active ссылке, которая ведёт к этой секции
+                    var link = document.querySelector('nav a[href="#' + section.id + '"]');
+                    if (link) link.classList.add('active');
+                }
+            });
+        });
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1021 @@
+/* ===================================
+   Стили для сайта кофейни "Уют"
+   Автор: Студент Иванов И.И.
+   Группа: ИСП-11
+   =================================== */
+
+/* Сброс стандартных стилей браузера */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Общие стили страницы */
+body {
+  font-family: "Georgia", serif;
+  background-color: #faf4ea;
+  color: #3e1f00;
+}
+
+/* ===================================
+   ШАПКА САЙТА (header)
+   =================================== */
+
+header {
+  background-color: #faf4ea;
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #e8d8c0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(62, 31, 0, 0.1);
+}
+
+/* Логотип */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #3e1f00;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+}
+
+.logo-text {
+  font-size: 24px;
+  font-weight: bold;
+  font-family: "Georgia", serif;
+}
+
+/* Навигация */
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 5px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  color: #3e1f00;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+/* Подсветка при наведении */
+nav ul li a:hover {
+  background-color: #c17f4a;
+  color: white;
+}
+
+/* Активная ссылка */
+nav ul li a.active {
+  background-color: #c17f4a;
+  color: white;
+}
+
+/* ===================================
+   БЛОК HERO (главный баннер)
+   =================================== */
+
+.hero {
+  background-image: url("https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/16d47531-c9ca-40f2-b031-679ac9b948d2.jpg");
+  background-size: cover;
+  background-position: center;
+  height: 550px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+}
+
+/* Тёмное затемнение поверх фото */
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(62, 31, 0, 0.55);
+}
+
+/* Текст героя поверх затемнения */
+.hero-content {
+  position: relative;
+  z-index: 1;
+  color: white;
+}
+
+.hero-content p {
+  font-size: 13px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #edd9b8;
+  margin-bottom: 15px;
+}
+
+.hero-content h1 {
+  font-size: 56px;
+  font-family: "Georgia", serif;
+  margin-bottom: 15px;
+  line-height: 1.2;
+}
+
+.hero-content h1 span {
+  color: #edd9b8;
+}
+
+.hero-content .subtitle {
+  font-size: 18px;
+  color: #edd9b8;
+  font-weight: normal;
+  letter-spacing: 0;
+  text-transform: none;
+  margin-bottom: 35px;
+}
+
+/* Кнопки в герое */
+.hero-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-main {
+  background-color: #c17f4a;
+  color: white;
+  padding: 14px 30px;
+  border: none;
+  border-radius: 30px;
+  font-size: 15px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
+}
+
+.btn-main:hover {
+  background-color: #a86935;
+  transform: scale(1.03);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: white;
+  padding: 14px 30px;
+  border: 2px solid white;
+  border-radius: 30px;
+  font-size: 15px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.2s;
+}
+
+.btn-outline:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* ===================================
+   ОБЩИЕ СТИЛИ СЕКЦИЙ
+   =================================== */
+
+section {
+  padding: 60px 40px;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 36px;
+  font-family: "Georgia", serif;
+  color: #3e1f00;
+  margin-bottom: 10px;
+}
+
+.section-subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #8b6040;
+  margin-bottom: 40px;
+  font-family: Arial, sans-serif;
+}
+
+/* ===================================
+   СЛАЙДЕР
+   =================================== */
+
+.slider-section {
+  background-color: #f5ecd7;
+}
+
+/* Обёртка слайдера */
+.slider-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  height: 340px;
+}
+
+/* Один слайд */
+.slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  display: none; /* скрыты по умолчанию */
+  align-items: flex-end;
+}
+
+/* Активный слайд виден */
+.slide.active {
+  display: flex;
+}
+
+/* Текст на слайде */
+.slide-text {
+  background: linear-gradient(to top, rgba(62, 31, 0, 0.85), transparent);
+  padding: 30px;
+  width: 100%;
+  color: white;
+}
+
+.slide-text h3 {
+  font-size: 26px;
+  font-family: "Georgia", serif;
+  margin-bottom: 8px;
+}
+
+.slide-text p {
+  font-size: 14px;
+  color: #edd9b8;
+  font-family: Arial, sans-serif;
+}
+
+/* Кнопки переключения слайдера */
+.slider-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(250, 244, 234, 0.9);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.1s;
+}
+
+.slider-btn:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
+.slider-btn.prev {
+  left: 15px;
+}
+.slider-btn.next {
+  right: 15px;
+}
+
+/* Точки внизу слайдера */
+.slider-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 15px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #c8b49a;
+  border: none;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    width 0.2s;
+}
+
+.dot.active {
+  background-color: #c17f4a;
+  width: 24px;
+  border-radius: 5px;
+}
+
+/* ===================================
+   КАТАЛОГ / МЕНЮ
+   =================================== */
+
+.catalog-section {
+  background-color: #faf4ea;
+}
+
+/* Кнопки фильтра */
+.filter-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 35px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 10px 22px;
+  border-radius: 25px;
+  border: none;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  background-color: #f5ecd7;
+  color: #3e1f00;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
+}
+
+.filter-btn:hover {
+  transform: scale(1.03);
+}
+
+.filter-btn.active {
+  background-color: #c17f4a;
+  color: white;
+}
+
+/* Сетка карточек меню */
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Карточка блюда */
+.menu-card {
+  background-color: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(62, 31, 0, 0.08);
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s;
+}
+
+.menu-card:hover {
+  box-shadow: 0 6px 20px rgba(62, 31, 0, 0.15);
+  transform: translateY(-3px);
+}
+
+.menu-card h3 {
+  font-size: 16px;
+  font-family: "Georgia", serif;
+  color: #3e1f00;
+  margin-bottom: 5px;
+}
+
+.menu-card p {
+  font-size: 12px;
+  color: #8b6040;
+  font-family: Arial, sans-serif;
+  margin-bottom: 12px;
+}
+
+.menu-card .price {
+  font-size: 16px;
+  font-weight: bold;
+  color: #c17f4a;
+  font-family: Arial, sans-serif;
+}
+
+/* Кнопка добавить */
+.btn-add {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  background-color: #f5ecd7;
+  color: #6b3a2a;
+  border: none;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  transition: background-color 0.2s;
+}
+
+.btn-add:hover {
+  background-color: #e8d8c0;
+}
+
+/* Скрытые карточки (для фильтра) */
+.menu-card.hidden {
+  display: none;
+}
+
+/* ===================================
+   ФОТО В КАТАЛОГЕ (два фото рядом)
+   =================================== */
+
+.catalog-photos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto 40px auto;
+}
+
+.catalog-photos img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 16px;
+}
+
+/* ===================================
+   БРОНИРОВАНИЕ СТОЛИКА
+   =================================== */
+
+.booking-section {
+  background-color: #f5ecd7;
+}
+
+.booking-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+/* Форма */
+.booking-form {
+  background-color: white;
+  padding: 35px;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(62, 31, 0, 0.08);
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #8b6040;
+  font-family: Arial, sans-serif;
+  margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #e8d8c0;
+  border-radius: 10px;
+  background-color: #faf4ea;
+  font-size: 14px;
+  color: #3e1f00;
+  font-family: Arial, sans-serif;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #c17f4a;
+}
+
+/* Поля даты и времени рядом */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+/* Кнопка отправки формы */
+.btn-submit {
+  width: 100%;
+  padding: 15px;
+  background-color: #c17f4a;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
+  margin-top: 5px;
+}
+
+.btn-submit:hover {
+  background-color: #a86935;
+  transform: scale(1.01);
+}
+
+/* Сообщение об успехе */
+.success-msg {
+  text-align: center;
+  padding: 40px 20px;
+  display: none;
+}
+
+.success-msg .emoji {
+  font-size: 50px;
+  display: block;
+  margin-bottom: 15px;
+}
+
+.success-msg h3 {
+  font-size: 22px;
+  font-family: "Georgia", serif;
+  color: #3e1f00;
+  margin-bottom: 8px;
+}
+
+.success-msg p {
+  color: #8b6040;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+/* Преимущества рядом с формой */
+.booking-benefits {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.benefit-card {
+  background-color: white;
+  padding: 18px 20px;
+  border-radius: 15px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  box-shadow: 0 2px 6px rgba(62, 31, 0, 0.06);
+  transition: box-shadow 0.2s;
+}
+
+.benefit-card:hover {
+  box-shadow: 0 4px 14px rgba(62, 31, 0, 0.12);
+}
+
+.benefit-icon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.benefit-card h4 {
+  font-size: 14px;
+  font-weight: bold;
+  color: #3e1f00;
+  font-family: Arial, sans-serif;
+  margin-bottom: 4px;
+}
+
+.benefit-card p {
+  font-size: 12px;
+  color: #8b6040;
+  font-family: Arial, sans-serif;
+}
+
+/* ===================================
+   ОФОРМИТЬ ЗАКАЗ
+   =================================== */
+
+.order-section {
+  background-color: #faf4ea;
+  text-align: center;
+}
+
+.order-box {
+  max-width: 620px;
+  margin: 0 auto;
+  background-color: white;
+  border: 2px solid #e8d8c0;
+  border-radius: 24px;
+  padding: 40px;
+}
+
+/* Кнопки выбора типа заказа */
+.order-type {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.type-btn {
+  padding: 20px 15px;
+  border-radius: 16px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-family: Arial, sans-serif;
+  transition:
+    transform 0.1s,
+    box-shadow 0.2s;
+  background-color: #f5ecd7;
+  color: #3e1f00;
+}
+
+.type-btn:hover {
+  transform: scale(1.02);
+}
+
+/* Активная кнопка типа заказа */
+.type-btn.active {
+  background-color: #6b3a2a;
+  color: white;
+  box-shadow: 0 4px 16px rgba(107, 58, 42, 0.3);
+}
+
+.type-btn .type-icon {
+  font-size: 26px;
+}
+
+.type-btn .type-name {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.type-btn .type-sub {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* Поля ввода в заказе */
+.order-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.order-inputs input {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1px solid #e8d8c0;
+  border-radius: 12px;
+  background-color: #faf4ea;
+  font-size: 14px;
+  color: #3e1f00;
+  font-family: Arial, sans-serif;
+  outline: none;
+}
+
+.order-inputs input:focus {
+  border-color: #c17f4a;
+}
+
+/* Блок информации о доставке (скрытый по умолчанию) */
+.delivery-info {
+  background-color: #faf4ea;
+  border: 1px solid #e8d8c0;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: left;
+  display: none; /* покажем через JS когда выбрана доставка */
+}
+
+.delivery-info h4 {
+  font-size: 14px;
+  font-weight: bold;
+  color: #3e1f00;
+  font-family: Arial, sans-serif;
+  margin-bottom: 15px;
+}
+
+.delivery-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.delivery-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.delivery-item .d-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.delivery-item p {
+  font-size: 12px;
+  color: #6b3a2a;
+  font-family: Arial, sans-serif;
+  line-height: 1.4;
+}
+
+.delivery-item strong {
+  display: block;
+  color: #3e1f00;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+/* ===================================
+   МАСТЕР-КЛАССЫ
+   =================================== */
+
+.masterclass-section {
+  background-color: #f5ecd7;
+}
+
+/* Верхний блок с текстом и фото */
+.mc-intro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+  max-width: 1000px;
+  margin: 0 auto 50px auto;
+  align-items: center;
+}
+
+.mc-intro-text .label {
+  font-size: 11px;
+  font-weight: bold;
+  color: #c17f4a;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-family: Arial, sans-serif;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.mc-intro-text h2 {
+  font-size: 44px;
+  font-family: "Georgia", serif;
+  color: #3e1f00;
+  line-height: 1.2;
+  margin-bottom: 15px;
+}
+
+.mc-intro-text h2 span {
+  color: #c17f4a;
+}
+
+.mc-intro-text p {
+  font-size: 15px;
+  color: #6b3a2a;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.mc-intro-photo {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.mc-intro-photo img {
+  width: 100%;
+  height: 260px;
+  object-fit: cover;
+}
+
+/* Сетка карточек мастер-классов */
+.mc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.mc-card {
+  background-color: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(62, 31, 0, 0.08);
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s;
+}
+
+.mc-card:hover {
+  box-shadow: 0 8px 25px rgba(62, 31, 0, 0.15);
+  transform: translateY(-5px);
+}
+
+.mc-card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+.mc-card-body {
+  padding: 20px;
+}
+
+.mc-level {
+  background-color: #f5ecd7;
+  color: #c17f4a;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-family: Arial, sans-serif;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.mc-card h3 {
+  font-size: 16px;
+  font-family: "Georgia", serif;
+  color: #3e1f00;
+  margin-bottom: 8px;
+}
+
+.mc-card p {
+  font-size: 12px;
+  color: #8b6040;
+  font-family: Arial, sans-serif;
+  margin-bottom: 15px;
+  line-height: 1.4;
+}
+
+.mc-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mc-price {
+  font-size: 22px;
+  font-weight: bold;
+  color: #c17f4a;
+  font-family: Arial, sans-serif;
+}
+
+.btn-signup {
+  background-color: #c17f4a;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
+}
+
+.btn-signup:hover {
+  background-color: #a86935;
+  transform: scale(1.05);
+}
+
+/* ===================================
+   ПОДВАЛ (footer)
+   =================================== */
+
+footer {
+  background-color: #3e1f00;
+  color: #c17f4a;
+  padding: 40px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 30px;
+  max-width: 1000px;
+  margin: 0 auto 30px auto;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.footer-logo-text {
+  font-size: 20px;
+  font-family: "Georgia", serif;
+  color: #faf4ea;
+  font-weight: bold;
+}
+
+.footer-desc {
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+  line-height: 1.5;
+}
+
+.footer-col h4 {
+  font-size: 13px;
+  font-weight: bold;
+  color: #edd9b8;
+  font-family: Arial, sans-serif;
+  margin-bottom: 10px;
+}
+
+.footer-col p {
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+  line-height: 1.7;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(193, 127, 74, 0.3);
+  padding-top: 20px;
+  text-align: center;
+  font-size: 12px;
+  font-family: Arial, sans-serif;
+  color: #8b6040;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* ===================================
+   КНОПКА "НАВЕРХ"
+   =================================== */
+
+#btn-top {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 46px;
+  height: 46px;
+  background-color: #c17f4a;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  display: none; /* скрыта по умолчанию */
+  z-index: 999;
+  box-shadow: 0 3px 12px rgba(193, 127, 74, 0.5);
+  transition:
+    transform 0.2s,
+    background-color 0.2s;
+}
+
+#btn-top:hover {
+  transform: scale(1.1);
+  background-color: #a86935;
+}
+
+/* ===================================
+   АНИМАЦИЯ ПОЯВЛЕНИЯ СЕКЦИЙ
+   (простая через класс visible)
+   =================================== */
+
+.fade-section {
+  opacity: 0;
+  transform: translateY(25px);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+
+.fade-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
