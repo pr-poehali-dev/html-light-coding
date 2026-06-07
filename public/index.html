@@ -59,195 +59,122 @@
 
 
     <!-- ============================
-         СЛАЙДЕР — Акции и новинки
-         ============================ -->
-    <section class="slider-section fade-section" id="slider">
-        <h2 class="section-title">Акции и новинки</h2>
-        <p class="section-subtitle">Специальные предложения этого сезона</p>
-
-        <div class="slider-wrapper">
-
-            <!-- Слайд 1 -->
-            <div class="slide active"
-                 style="background-image: url('https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/8986274b-25e2-4952-bd6a-eae17d05349b.jpg')">
-                <div class="slide-text">
-                    <h3>Авторский Espresso Tonic</h3>
-                    <p>Наш фирменный напиток — эспрессо на тоническом лимонаде с тимьяном и апельсиновой цедрой.</p>
-                </div>
-            </div>
-
-            <!-- Слайд 2 -->
-            <div class="slide"
-                 style="background-image: url('https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/37ccf19b-07c3-4fa0-8922-b4c4d8edd2a1.jpg')">
-                <div class="slide-text">
-                    <h3>Завтрак в Уюте</h3>
-                    <p>Круассан с лососем, кофе на выбор и свежевыжатый сок — идеальное начало дня.</p>
-                </div>
-            </div>
-
-            <!-- Слайд 3 -->
-            <div class="slide"
-                 style="background-image: url('https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/6b8d3310-b239-4068-b90d-0a8eed664a68.jpg')">
-                <div class="slide-text">
-                    <h3>Мастер-классы по латте-арт</h3>
-                    <p>Научитесь рисовать кофейные шедевры вместе с нашими опытными бариста.</p>
-                </div>
-            </div>
-
-            <!-- Кнопки «влево» и «вправо» -->
-            <button class="slider-btn prev" onclick="changeSlide(-1)">&#8249;</button>
-            <button class="slider-btn next" onclick="changeSlide(1)">&#8250;</button>
-        </div>
-
-        <!-- Точки навигации слайдера -->
-        <div class="slider-dots">
-            <button class="dot active" onclick="goToSlide(0)"></button>
-            <button class="dot"        onclick="goToSlide(1)"></button>
-            <button class="dot"        onclick="goToSlide(2)"></button>
-        </div>
-    </section>
-
-
-    <!-- ============================
-         КАТАЛОГ (МЕНЮ С ФИЛЬТРОМ)
+         КАТАЛОГ С ФИЛЬТРАМИ И СЛАЙДЕРОМ
          ============================ -->
     <section class="catalog-section fade-section" id="catalog">
-        <h2 class="section-title">КАТАЛОГ</h2>
-        <p class="section-subtitle">Отборные сорта кофе и свежая выпечка собственного производства</p>
+        <h2 class="section-title">Наше меню</h2>
+        <p class="section-subtitle">Свежий кофе и домашняя выпечка каждый день</p>
 
-        <!-- Два фото рядом -->
-        <div class="catalog-photos">
-            <img src="https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/8986274b-25e2-4952-bd6a-eae17d05349b.jpg"
-                 alt="Кофе">
-            <img src="https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/37ccf19b-07c3-4fa0-8922-b4c4d8edd2a1.jpg"
-                 alt="Выпечка">
-        </div>
-
-        <!-- Кнопки фильтра по категориям -->
+        <!-- Фильтры-таблетки -->
         <div class="filter-buttons">
-            <button class="filter-btn active" onclick="filterMenu('all')">☕🥐 Всё</button>
-            <button class="filter-btn" onclick="filterMenu('coffee')">☕ Кофе</button>
+            <button class="filter-btn active" onclick="filterMenu('coffee')">☕ Кофе</button>
             <button class="filter-btn" onclick="filterMenu('pastry')">🥐 Выпечка</button>
-            <button class="filter-btn" onclick="filterMenu('tea')">🍵 Чай и напитки</button>
+            <button class="filter-btn" onclick="filterMenu('tea')">🍵 Чай</button>
         </div>
 
-        <!-- Карточки меню -->
-        <!-- Атрибут data-category нужен для фильтра -->
-        <div class="menu-grid">
+        <!-- Слайдер фото для текущей категории -->
+        <div class="cat-slider-wrap">
+            <!-- Фото кофе -->
+            <div class="cat-photo active" id="photo-coffee">
+                <img src="https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/8986274b-25e2-4952-bd6a-eae17d05349b.jpg" alt="Кофе">
+            </div>
+            <!-- Фото выпечки -->
+            <div class="cat-photo" id="photo-pastry">
+                <img src="https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/37ccf19b-07c3-4fa0-8922-b4c4d8edd2a1.jpg" alt="Выпечка">
+            </div>
+            <!-- Фото чая -->
+            <div class="cat-photo" id="photo-tea">
+                <img src="https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/6b8d3310-b239-4068-b90d-0a8eed664a68.jpg" alt="Чай">
+            </div>
+        </div>
+
+        <!-- Простые строчки меню -->
+        <div class="menu-list" id="menu-list">
 
             <!-- Кофе -->
-            <div class="menu-card" data-category="coffee">
-                <h3>Эспрессо</h3>
-                <p>Классический крепкий кофе</p>
-                <div class="price">120 ₽</div>
-                <button class="btn-add">+ Добавить в заказ</button>
+            <div class="menu-row" data-category="coffee">
+                <span class="menu-row-name">Эспрессо</span>
+                <span class="menu-row-dots"></span>
+                <span class="menu-row-price">120 ₽</span>
             </div>
-
-            <div class="menu-card" data-category="coffee">
-                <h3>Капучино</h3>
-                <p>Нежный кофе с молочной пенкой</p>
-                <div class="price">190 ₽</div>
-                <button class="btn-add">+ Добавить в заказ</button>
+            <div class="menu-row" data-category="coffee">
+                <span class="menu-row-name">Капучино</span>
+                <span class="menu-row-dots"></span>
+                <span class="menu-row-price">190 ₽</span>
             </div>
-
-            <div class="menu-card" data-category="coffee">
-                <h3>Латте</h3>
-                <p>Мягкий кофе с молоком</p>
-                <div class="price">210 ₽</div>
-                <button class="btn-add">+ Добавить в заказ</button>
+            <div class="menu-row" data-category="coffee">
+                <span class="menu-row-name">Латте</span>
+                <span class="menu-row-dots"></span>
+                <span class="menu-row-price">210 ₽</span>
             </div>
-
-            <div class="menu-card" data-category="coffee">
-                <h3>Американо</h3>
-                <p>Нежный разбавленный эспрессо</p>
-                <div class="price">150 ₽</div>
-                <button class="btn-add">+ Добавить в заказ</button>
+            <div class="menu-row" data-category="coffee">
+                <span class="menu-row-name">Американо</span>
+                <span class="menu-row-dots"></span>
+                <span class="menu-row-price">150 ₽</span>
             </div>
-
-            <div class="menu-card" data-category="coffee">
-                <h3>Раф</h3>
-                <p>Сливочный кофе с ванилью</p>
-                <div class="price">230 ₽</div>
-                <button class="btn-add">+ Добавить в заказ</button>
+            <div class="menu-row" data-category="coffee">
+                <span class="menu-row-name">Раф</span>
+                <span class="menu-row-dots"></span>
+                <span class="menu-row-price">230 ₽</span>
             </div>
-
-            <div class="menu-card" data-category="coffee">
-                <h3>Флэт Уайт</h3>
-                <p>Двойной эспрессо с бархатной пенкой</p>
-                <div class="price">200 ₽</div>
-                <button class="btn-add">+ Добавить в заказ</button>
+            <div class="menu-row" data-category="coffee">
+                <span class="menu-row-name">Флэт Уайт</span>
+                <span class="menu-row-dots"></span>
+                <span class="menu-row-price">200 ₽</span>
             </div>
 
             <!-- Выпечка -->
-            <div class="menu-card" data-category="pastry">
-                <h3>Круассан</h3>
-                <p>Нежный французский круассан</p>
-                <div class="price">90 ₽</div>
-                <button class="btn-add">+ Добавить в заказ</button>
+            <div class="menu-row hidden" data-category="pastry">
+                <span class="menu-row-name">Круассан</span>
+                <span class="menu-row-dots"></span>
+                <span class="menu-row-price">90 ₽</span>
+            </div>
+            <div class="menu-row hidden" data-category="pastry">
+                <span class="menu-row-name">Булочка с корицей</span>
+                <span class="menu-row-dots"></span>
+                <span class="menu-row-price">110 ₽</span>
+            </div>
+            <div class="menu-row hidden" data-category="pastry">
+                <span class="menu-row-name">Чизкейк</span>
+                <span class="menu-row-dots"></span>
+                <span class="menu-row-price">230 ₽</span>
+            </div>
+            <div class="menu-row hidden" data-category="pastry">
+                <span class="menu-row-name">Брауни</span>
+                <span class="menu-row-dots"></span>
+                <span class="menu-row-price">90 ₽</span>
+            </div>
+            <div class="menu-row hidden" data-category="pastry">
+                <span class="menu-row-name">Эклер</span>
+                <span class="menu-row-dots"></span>
+                <span class="menu-row-price">140 ₽</span>
+            </div>
+            <div class="menu-row hidden" data-category="pastry">
+                <span class="menu-row-name">Штрудель</span>
+                <span class="menu-row-dots"></span>
+                <span class="menu-row-price">240 ₽</span>
             </div>
 
-            <div class="menu-card" data-category="pastry">
-                <h3>Булочка с корицей</h3>
-                <p>Пропитанная сладкая булочка</p>
-                <div class="price">110 ₽</div>
-                <button class="btn-add">+ Добавить в заказ</button>
+            <!-- Чай -->
+            <div class="menu-row hidden" data-category="tea">
+                <span class="menu-row-name">Чай Earl Grey</span>
+                <span class="menu-row-dots"></span>
+                <span class="menu-row-price">100 ₽</span>
             </div>
-
-            <div class="menu-card" data-category="pastry">
-                <h3>Чизкейк</h3>
-                <p>Нежный голландский десерт</p>
-                <div class="price">230 ₽</div>
-                <button class="btn-add">+ Добавить в заказ</button>
+            <div class="menu-row hidden" data-category="tea">
+                <span class="menu-row-name">Зелёный чай</span>
+                <span class="menu-row-dots"></span>
+                <span class="menu-row-price">90 ₽</span>
             </div>
-
-            <div class="menu-card" data-category="pastry">
-                <h3>Брауни</h3>
-                <p>Шоколадный торт с грецкими орехами</p>
-                <div class="price">90 ₽</div>
-                <button class="btn-add">+ Добавить в заказ</button>
+            <div class="menu-row hidden" data-category="tea">
+                <span class="menu-row-name">Ромашковый</span>
+                <span class="menu-row-dots"></span>
+                <span class="menu-row-price">85 ₽</span>
             </div>
-
-            <div class="menu-card" data-category="pastry">
-                <h3>Эклер</h3>
-                <p>Пирожное с кремом и глазурью</p>
-                <div class="price">140 ₽</div>
-                <button class="btn-add">+ Добавить в заказ</button>
-            </div>
-
-            <div class="menu-card" data-category="pastry">
-                <h3>Штрудель</h3>
-                <p>Тянутое тесто с яблочной начинкой</p>
-                <div class="price">240 ₽</div>
-                <button class="btn-add">+ Добавить в заказ</button>
-            </div>
-
-            <!-- Чай и напитки -->
-            <div class="menu-card" data-category="tea">
-                <h3>Чай Earl Grey</h3>
-                <p>Классический английский чай с бергамотом</p>
-                <div class="price">100 ₽</div>
-                <button class="btn-add">+ Добавить в заказ</button>
-            </div>
-
-            <div class="menu-card" data-category="tea">
-                <h3>Зелёный чай</h3>
-                <p>Мягкий японский сенча</p>
-                <div class="price">90 ₽</div>
-                <button class="btn-add">+ Добавить в заказ</button>
-            </div>
-
-            <div class="menu-card" data-category="tea">
-                <h3>Ромашковый</h3>
-                <p>Успокаивающий травяной напиток</p>
-                <div class="price">85 ₽</div>
-                <button class="btn-add">+ Добавить в заказ</button>
-            </div>
-
-            <div class="menu-card" data-category="tea">
-                <h3>Ягодный морс</h3>
-                <p>Свежий напиток из лесных ягод</p>
-                <div class="price">130 ₽</div>
-                <button class="btn-add">+ Добавить в заказ</button>
+            <div class="menu-row hidden" data-category="tea">
+                <span class="menu-row-name">Ягодный морс</span>
+                <span class="menu-row-dots"></span>
+                <span class="menu-row-price">130 ₽</span>
             </div>
 
         </div>
@@ -607,70 +534,35 @@
          ============================ -->
     <script>
 
-        // ===== СЛАЙДЕР =====
-
-        // Текущий индекс активного слайда (начинаем с 0)
-        var currentSlide = 0;
-
-        // Получаем все слайды и точки
-        var slides = document.querySelectorAll('.slide');
-        var dots   = document.querySelectorAll('.dot');
-
-        // Переключить на конкретный слайд по индексу
-        function goToSlide(index) {
-            // Убираем класс active у текущего слайда и точки
-            slides[currentSlide].classList.remove('active');
-            dots[currentSlide].classList.remove('active');
-
-            // Запоминаем новый индекс
-            currentSlide = index;
-
-            // Если вышли за границы — зацикливаем
-            if (currentSlide < 0) currentSlide = slides.length - 1;
-            if (currentSlide >= slides.length) currentSlide = 0;
-
-            // Добавляем active новому слайду и точке
-            slides[currentSlide].classList.add('active');
-            dots[currentSlide].classList.add('active');
-        }
-
-        // Сдвинуть слайдер на direction (+1 или -1)
-        function changeSlide(direction) {
-            goToSlide(currentSlide + direction);
-        }
-
-        // Автоматическое переключение каждые 4 секунды
-        setInterval(function() {
-            changeSlide(1);
-        }, 4000);
-
-
-        // ===== ФИЛЬТР МЕНЮ =====
+        // ===== ФИЛЬТР КАТАЛОГА СО СЛАЙДЕРОМ ФОТО =====
 
         function filterMenu(category) {
-            // Получаем все карточки меню
-            var cards   = document.querySelectorAll('.menu-card');
+            // Получаем все строки меню и кнопки фильтра
+            var rows    = document.querySelectorAll('.menu-row');
             var buttons = document.querySelectorAll('.filter-btn');
+            var photos  = document.querySelectorAll('.cat-photo');
 
-            // Убираем active у всех кнопок фильтра
-            buttons.forEach(function(btn) {
-                btn.classList.remove('active');
-            });
+            // Снимаем active со всех кнопок и фото
+            buttons.forEach(function(btn) { btn.classList.remove('active'); });
+            photos.forEach(function(p) { p.classList.remove('active'); });
 
-            // Добавляем active нажатой кнопке
-            // Ищем кнопку, которая вызвала нужную категорию
+            // Ставим active на нужную кнопку
             buttons.forEach(function(btn) {
                 if (btn.getAttribute('onclick') === "filterMenu('" + category + "')") {
                     btn.classList.add('active');
                 }
             });
 
-            // Показываем или скрываем карточки по категории
-            cards.forEach(function(card) {
-                if (category === 'all' || card.getAttribute('data-category') === category) {
-                    card.classList.remove('hidden');
+            // Показываем фото нужной категории
+            var activePhoto = document.getElementById('photo-' + category);
+            if (activePhoto) activePhoto.classList.add('active');
+
+            // Показываем строки только нужной категории
+            rows.forEach(function(row) {
+                if (row.getAttribute('data-category') === category) {
+                    row.classList.remove('hidden');
                 } else {
-                    card.classList.add('hidden');
+                    row.classList.add('hidden');
                 }
             });
         }
