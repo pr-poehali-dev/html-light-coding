@@ -52,23 +52,20 @@ const MASTERCLASSES = [
   },
 ];
 
-const SLIDER_ITEMS = [
-  {
-    title: "Авторский Espresso Tonic",
-    desc: "Наш фирменный напиток — эспрессо на тоническом лимонаде с тимьяном и апельсиновой цедрой.",
-    img: "https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/8986274b-25e2-4952-bd6a-eae17d05349b.jpg",
-  },
-  {
-    title: "Завтрак в Уюте",
-    desc: "Круассан с лососем, кофе на выбор и свежевыжатый сок — идеальное начало дня.",
-    img: "https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/37ccf19b-07c3-4fa0-8922-b4c4d8edd2a1.jpg",
-  },
-  {
-    title: "Мастер-классы по латте-арт",
-    desc: "Научитесь рисовать кофейные шедевры вместе с нашими опытными бариста.",
-    img: "https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/6b8d3310-b239-4068-b90d-0a8eed664a68.jpg",
-  },
-];
+const CATEGORY_PHOTOS: Record<"coffee" | "pastry" | "tea", string[]> = {
+  coffee: [
+    "https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/8986274b-25e2-4952-bd6a-eae17d05349b.jpg",
+    "https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/6b8d3310-b239-4068-b90d-0a8eed664a68.jpg",
+  ],
+  pastry: [
+    "https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/37ccf19b-07c3-4fa0-8922-b4c4d8edd2a1.jpg",
+    "https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/8986274b-25e2-4952-bd6a-eae17d05349b.jpg",
+  ],
+  tea: [
+    "https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/6b8d3310-b239-4068-b90d-0a8eed664a68.jpg",
+    "https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/37ccf19b-07c3-4fa0-8922-b4c4d8edd2a1.jpg",
+  ],
+};
 
 type Page = "home" | "menu" | "masterclass" | "order" | "contacts";
 
@@ -78,8 +75,8 @@ export default function Index() {
   const [activePage, setActivePage] = useState<Page>("home");
   const [navScrolled, setNavScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [sliderIndex, setSliderIndex] = useState(0);
   const [menuFilter, setMenuFilter] = useState<"coffee" | "pastry" | "tea">("coffee");
+  const [catPhotoIndex, setCatPhotoIndex] = useState(0);
   const [booking, setBooking] = useState({ name: "", phone: "", date: "", time: "", guests: "" });
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [orderType, setOrderType] = useState<"pickup" | "delivery">("pickup");
@@ -97,11 +94,8 @@ export default function Index() {
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setSliderIndex((i) => (i + 1) % SLIDER_ITEMS.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
+    setCatPhotoIndex(0);
+  }, [menuFilter]);
 
   const handleBooking = (e: React.FormEvent) => {
     e.preventDefault();
@@ -247,113 +241,96 @@ export default function Index() {
             </div>
           </section>
 
-          {/* СЛАЙДЕР */}
-          <section className="py-16 px-6" style={{ background: "#F5ECD7" }}>
-            <div className="max-w-5xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-bold text-center mb-3" style={{ fontFamily: "'Playfair Display', serif", color: "#3E1F00" }}>Акции и новинки</h2>
-              <p className="text-center text-sm mb-10" style={{ color: "#8B6040" }}>Специальные предложения этого сезона</p>
+          {/* КАТАЛОГ — лёгкий, со слайдером фото и строчным меню */}
+          <section className="py-14 px-6" style={{ background: "#FAF4EA" }}>
+            <div className="max-w-3xl mx-auto">
+              <h2 className="text-3xl font-bold text-center mb-1" style={{ fontFamily: "'Playfair Display', serif", color: "#3E1F00" }}>Меню</h2>
+              <p className="text-center text-sm mb-8" style={{ color: "#A07850" }}>Свежий кофе и домашняя выпечка каждый день</p>
 
-              <div className="relative rounded-3xl overflow-hidden shadow-xl" style={{ height: "360px" }}>
-                {SLIDER_ITEMS.map((item, i) => (
-                  <div
-                    key={i}
-                    className="absolute inset-0 transition-opacity duration-700"
-                    style={{ opacity: sliderIndex === i ? 1 : 0, pointerEvents: sliderIndex === i ? "auto" : "none" }}
+              {/* Фильтры-таблетки */}
+              <div className="flex justify-center gap-2 mb-8 flex-wrap">
+                {([
+                  { key: "coffee", label: "☕ Кофе" },
+                  { key: "pastry", label: "🥐 Выпечка" },
+                  { key: "tea",    label: "🍵 Чай" },
+                ] as { key: "coffee"|"pastry"|"tea"; label: string }[]).map((tab) => (
+                  <button
+                    key={tab.key}
+                    onClick={() => setMenuFilter(tab.key)}
+                    className="px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 hover:scale-105"
+                    style={{
+                      background: menuFilter === tab.key ? "#C17F4A" : "transparent",
+                      color: menuFilter === tab.key ? "#FAF4EA" : "#8B6040",
+                      border: menuFilter === tab.key ? "2px solid #C17F4A" : "2px solid #E8D8C0",
+                    }}
                   >
-                    <div className="w-full h-full bg-cover bg-center flex items-end" style={{ backgroundImage: `url(${item.img})` }}>
-                      <div className="p-8 w-full" style={{ background: "linear-gradient(to top, rgba(62,31,0,0.85) 0%, transparent 100%)" }}>
-                        <h3 className="text-2xl md:text-3xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', serif", color: "#FAF4EA" }}>{item.title}</h3>
-                        <p className="text-base max-w-xl" style={{ color: "#EDD9B8", fontWeight: 300 }}>{item.desc}</p>
-                      </div>
-                    </div>
-                  </div>
+                    {tab.label}
+                  </button>
                 ))}
+              </div>
 
+              {/* Фото-слайдер текущей категории */}
+              <div className="relative rounded-2xl overflow-hidden mb-8" style={{ height: "200px" }}>
+                {CATEGORY_PHOTOS[menuFilter].map((src, i) => (
+                  <img
+                    key={i}
+                    src={src}
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
+                    style={{ opacity: catPhotoIndex === i ? 1 : 0 }}
+                  />
+                ))}
+                {/* Стрелки */}
                 <button
-                  onClick={() => setSliderIndex((sliderIndex - 1 + SLIDER_ITEMS.length) % SLIDER_ITEMS.length)}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
-                  style={{ background: "rgba(250,244,234,0.9)", color: "#3E1F00" }}
+                  onClick={() => setCatPhotoIndex((catPhotoIndex - 1 + CATEGORY_PHOTOS[menuFilter].length) % CATEGORY_PHOTOS[menuFilter].length)}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center"
+                  style={{ background: "rgba(250,244,234,0.85)", color: "#3E1F00" }}
                 >
-                  <Icon name="ChevronLeft" size={20} />
+                  <Icon name="ChevronLeft" size={16} />
                 </button>
                 <button
-                  onClick={() => setSliderIndex((sliderIndex + 1) % SLIDER_ITEMS.length)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-110"
-                  style={{ background: "rgba(250,244,234,0.9)", color: "#3E1F00" }}
+                  onClick={() => setCatPhotoIndex((catPhotoIndex + 1) % CATEGORY_PHOTOS[menuFilter].length)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center"
+                  style={{ background: "rgba(250,244,234,0.85)", color: "#3E1F00" }}
                 >
-                  <Icon name="ChevronRight" size={20} />
+                  <Icon name="ChevronRight" size={16} />
                 </button>
-
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                  {SLIDER_ITEMS.map((_, i) => (
+                {/* Точки */}
+                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                  {CATEGORY_PHOTOS[menuFilter].map((_, i) => (
                     <button
                       key={i}
-                      onClick={() => setSliderIndex(i)}
+                      onClick={() => setCatPhotoIndex(i)}
                       className="rounded-full transition-all duration-300"
-                      style={{ width: sliderIndex === i ? "24px" : "8px", height: "8px", background: sliderIndex === i ? "#C17F4A" : "rgba(255,255,255,0.6)" }}
+                      style={{ width: catPhotoIndex === i ? "20px" : "7px", height: "7px", background: catPhotoIndex === i ? "#C17F4A" : "rgba(255,255,255,0.7)" }}
                     />
                   ))}
                 </div>
               </div>
-            </div>
-          </section>
 
-          {/* КАТАЛОГ */}
-          <section className="py-16 px-6" style={{ background: "#FAF4EA" }}>
-            <div className="max-w-5xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-bold text-center mb-2" style={{ fontFamily: "'Playfair Display', serif", color: "#3E1F00" }}>КАТАЛОГ</h2>
-              <p className="text-center text-sm mb-10" style={{ color: "#8B6040" }}>Отборные сорта кофе и свежая выпечка собственного производства</p>
-
-              <div className="grid md:grid-cols-2 gap-8">
-                {/* Кофе */}
-                <div className="rounded-3xl overflow-hidden shadow-md">
-                  <img src="https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/8986274b-25e2-4952-bd6a-eae17d05349b.jpg" alt="Кофе" className="w-full h-48 object-cover" />
-                  <div className="p-6" style={{ background: "white" }}>
-                    <div className="flex items-center gap-2 mb-4">
-                      <span className="text-xl">☕</span>
-                      <h3 className="text-xl font-bold" style={{ fontFamily: "'Playfair Display', serif", color: "#3E1F00" }}>Кофе</h3>
-                    </div>
-                    <ul className="space-y-2">
-                      {MENU_ITEMS.coffee.slice(0, 4).map((item) => (
-                        <li key={item.name} className="flex justify-between items-center py-1.5" style={{ borderBottom: "1px dashed #E8D8C0" }}>
-                          <div>
-                            <p className="font-medium text-sm" style={{ color: "#3E1F00" }}>{item.name}</p>
-                            <p className="text-xs" style={{ color: "#8B6040" }}>{item.desc}</p>
-                          </div>
-                          <span className="font-bold text-sm ml-4 flex-shrink-0" style={{ color: "#C17F4A" }}>{item.price} ₽</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <button onClick={() => setActivePage("menu")} className="mt-4 text-sm font-semibold transition-all hover:opacity-70" style={{ color: "#C17F4A" }}>
-                      Смотреть всё меню →
-                    </button>
+              {/* Строчное меню — как в бумажном меню кафе */}
+              <div>
+                {MENU_ITEMS[menuFilter].map((item, i) => (
+                  <div
+                    key={item.name}
+                    className="flex items-baseline gap-2 py-3 transition-colors hover:px-2 rounded-lg"
+                    style={{ borderBottom: i < MENU_ITEMS[menuFilter].length - 1 ? "1px dashed #E0CDB0" : "none" }}
+                  >
+                    <span className="text-base" style={{ fontFamily: "'Georgia', serif", color: "#3E1F00", whiteSpace: "nowrap" }}>{item.name}</span>
+                    <span className="flex-1" style={{ borderBottom: "2px dotted #D4B896", marginBottom: "4px" }} />
+                    <span className="text-base font-bold flex-shrink-0" style={{ color: "#C17F4A", fontFamily: "Arial, sans-serif" }}>{item.price} ₽</span>
                   </div>
-                </div>
+                ))}
+              </div>
 
-                {/* Выпечка */}
-                <div className="rounded-3xl overflow-hidden shadow-md">
-                  <img src="https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/37ccf19b-07c3-4fa0-8922-b4c4d8edd2a1.jpg" alt="Выпечка" className="w-full h-48 object-cover" />
-                  <div className="p-6" style={{ background: "white" }}>
-                    <div className="flex items-center gap-2 mb-4">
-                      <span className="text-xl">🥐</span>
-                      <h3 className="text-xl font-bold" style={{ fontFamily: "'Playfair Display', serif", color: "#3E1F00" }}>Выпечка</h3>
-                    </div>
-                    <ul className="space-y-2">
-                      {MENU_ITEMS.pastry.slice(0, 4).map((item) => (
-                        <li key={item.name} className="flex justify-between items-center py-1.5" style={{ borderBottom: "1px dashed #E8D8C0" }}>
-                          <div>
-                            <p className="font-medium text-sm" style={{ color: "#3E1F00" }}>{item.name}</p>
-                            <p className="text-xs" style={{ color: "#8B6040" }}>{item.desc}</p>
-                          </div>
-                          <span className="font-bold text-sm ml-4 flex-shrink-0" style={{ color: "#C17F4A" }}>{item.price} ₽</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <button onClick={() => setActivePage("menu")} className="mt-4 text-sm font-semibold transition-all hover:opacity-70" style={{ color: "#C17F4A" }}>
-                      Смотреть всё меню →
-                    </button>
-                  </div>
-                </div>
+              <div className="text-center mt-6">
+                <button
+                  onClick={() => setActivePage("menu")}
+                  className="text-sm font-semibold transition-all hover:opacity-70"
+                  style={{ color: "#C17F4A" }}
+                >
+                  Посмотреть полное меню →
+                </button>
               </div>
             </div>
           </section>
