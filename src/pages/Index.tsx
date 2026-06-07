@@ -1,56 +1,32 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Icon from "@/components/ui/icon";
 
 // ===================== ДАННЫЕ =====================
 
 const MENU_ITEMS = {
   coffee: [
-    { name: "Эспрессо", desc: "Классический крепкий кофе", price: 120 },
-    { name: "Капучино", desc: "Встреча с молочной нежной пенкой", price: 190 },
-    { name: "Латте", desc: "Нежный кофе с молоком", price: 210 },
-    { name: "Американо", desc: "Нежный разбавленный эспрессо", price: 150 },
-    { name: "Раф", desc: "Сливочный кофе с ванилью", price: 230 },
-    { name: "Флэт Уайт", desc: "Двойной эспрессо с бархатной пенкой", price: 200 },
+    { name: "Эспрессо", price: 120, emoji: "☕" },
+    { name: "Капучино", price: 190, emoji: "☕" },
+    { name: "Латте", price: 210, emoji: "☕" },
+    { name: "Американо", price: 150, emoji: "☕" },
+    { name: "Раф", price: 230, emoji: "☕" },
+    { name: "Флэт Уайт", price: 200, emoji: "☕" },
   ],
   pastry: [
-    { name: "Круассан", desc: "Нежный французский круассан", price: 90 },
-    { name: "Булочка с корицей", desc: "Пропитанная сладкая булочка", price: 110 },
-    { name: "Чизкейк", desc: "Нежный голландский десерт", price: 230 },
-    { name: "Брауни", desc: "Шоколадный торт с грецкими орехами", price: 90 },
-    { name: "Эклер", desc: "Бомбочка с кремом и глазурью", price: 140 },
-    { name: "Штрудель", desc: "Тянутое тесто с яблочной начинкой", price: 240 },
+    { name: "Круассан", price: 90, emoji: "🥐" },
+    { name: "Булочка с корицей", price: 110, emoji: "🍞" },
+    { name: "Чизкейк", price: 230, emoji: "🍰" },
+    { name: "Брауни", price: 90, emoji: "🍫" },
+    { name: "Эклер", price: 140, emoji: "🍮" },
+    { name: "Штрудель", price: 240, emoji: "🥧" },
   ],
   tea: [
-    { name: "Чай Earl Grey", desc: "Классический английский чай с бергамотом", price: 100 },
-    { name: "Зелёный чай", desc: "Мягкий японский сенча", price: 90 },
-    { name: "Ромашковый", desc: "Успокаивающий травяной напиток", price: 85 },
-    { name: "Ягодный морс", desc: "Свежий напиток из лесных ягод", price: 130 },
+    { name: "Earl Grey", price: 100, emoji: "🍵" },
+    { name: "Зелёный чай", price: 90, emoji: "🍵" },
+    { name: "Ромашковый", price: 85, emoji: "🌼" },
+    { name: "Ягодный морс", price: 130, emoji: "🫐" },
   ],
 };
-
-const MASTERCLASSES = [
-  {
-    title: "Базовый латте-арт",
-    desc: "Научитесь рисовать простые узоры. Подходит для начинающих.",
-    price: 2500,
-    img: "https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/6b8d3310-b239-4068-b90d-0a8eed664a68.jpg",
-    level: "Начинающий",
-  },
-  {
-    title: "Продвинутый латте-арт",
-    desc: "Сложные узоры. Настоящий профессиональный опыт.",
-    price: 3500,
-    img: "https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/8986274b-25e2-4952-bd6a-eae17d05349b.jpg",
-    level: "Продвинутый",
-  },
-  {
-    title: "Кофе от зерна до чашки",
-    desc: "Обжарка, помол, заваривание. Полное погружение.",
-    price: 4200,
-    img: "https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/37ccf19b-07c3-4fa0-8922-b4c4d8edd2a1.jpg",
-    level: "Все уровни",
-  },
-];
 
 const CATEGORY_PHOTOS: Record<"coffee" | "pastry" | "tea", string[]> = {
   coffee: [
@@ -67,22 +43,35 @@ const CATEGORY_PHOTOS: Record<"coffee" | "pastry" | "tea", string[]> = {
   ],
 };
 
-type Page = "home" | "menu" | "masterclass" | "order" | "contacts";
+const MASTERCLASSES = [
+  { title: "Базовый латте-арт", price: 2500, img: "https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/6b8d3310-b239-4068-b90d-0a8eed664a68.jpg", level: "Начинающий" },
+  { title: "Продвинутый латте-арт", price: 3500, img: "https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/8986274b-25e2-4952-bd6a-eae17d05349b.jpg", level: "Продвинутый" },
+  { title: "От зерна до чашки", price: 4200, img: "https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/37ccf19b-07c3-4fa0-8922-b4c4d8edd2a1.jpg", level: "Все уровни" },
+];
 
-// ===================== ГЛАВНЫЙ КОМПОНЕНТ =====================
+type CartItem = { name: string; price: number; emoji: string; qty: number };
+
+// ===================== КОМПОНЕНТ =====================
 
 export default function Index() {
-  const [activePage, setActivePage] = useState<Page>("home");
   const [navScrolled, setNavScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [menuFilter, setMenuFilter] = useState<"coffee" | "pastry" | "tea">("coffee");
   const [catPhotoIndex, setCatPhotoIndex] = useState(0);
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [orderDone, setOrderDone] = useState(false);
+  const [justAdded, setJustAdded] = useState<string | null>(null);
   const [booking, setBooking] = useState({ name: "", phone: "", date: "", time: "", guests: "" });
   const [bookingSuccess, setBookingSuccess] = useState(false);
-  const [orderType, setOrderType] = useState<"pickup" | "delivery">("pickup");
-  const [orderName, setOrderName] = useState("");
-  const [orderPhone, setOrderPhone] = useState("");
   const [showScrollTop, setShowScrollTop] = useState(false);
+
+  // refs для скролла к секциям
+  const heroRef = useRef<HTMLElement>(null);
+  const menuRef = useRef<HTMLElement>(null);
+  const mcRef = useRef<HTMLElement>(null);
+  const bookingRef = useRef<HTMLElement>(null);
+  const contactsRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -93,9 +82,37 @@ export default function Index() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    setCatPhotoIndex(0);
-  }, [menuFilter]);
+  useEffect(() => { setCatPhotoIndex(0); }, [menuFilter]);
+
+  const scrollTo = (ref: React.RefObject<HTMLElement | null>) => {
+    setMobileMenuOpen(false);
+    ref.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  // Добавить в корзину
+  const addToCart = (item: { name: string; price: number; emoji: string }) => {
+    setCart((prev) => {
+      const existing = prev.find((c) => c.name === item.name);
+      if (existing) return prev.map((c) => c.name === item.name ? { ...c, qty: c.qty + 1 } : c);
+      return [...prev, { ...item, qty: 1 }];
+    });
+    setJustAdded(item.name);
+    setTimeout(() => setJustAdded(null), 1500);
+  };
+
+  const removeFromCart = (name: string) => {
+    setCart((prev) => prev.filter((c) => c.name !== name));
+  };
+
+  const cartTotal = cart.reduce((s, c) => s + c.price * c.qty, 0);
+  const cartCount = cart.reduce((s, c) => s + c.qty, 0);
+
+  const placeOrder = () => {
+    setCart([]);
+    setCartOpen(false);
+    setOrderDone(true);
+    setTimeout(() => setOrderDone(false), 4000);
+  };
 
   const handleBooking = (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,13 +121,12 @@ export default function Index() {
     setTimeout(() => setBookingSuccess(false), 4000);
   };
 
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
-
   const navLinks = [
-    { key: "menu" as Page, label: "Наше меню" },
-    { key: "masterclass" as Page, label: "Мастер-классы" },
-    { key: "order" as Page, label: "Оформить заказ" },
-    { key: "contacts" as Page, label: "Контакты" },
+    { label: "Главная", ref: heroRef },
+    { label: "Меню", ref: menuRef },
+    { label: "Мастер-классы", ref: mcRef },
+    { label: "Бронирование", ref: bookingRef },
+    { label: "Контакты", ref: contactsRef },
   ];
 
   return (
@@ -123,34 +139,28 @@ export default function Index() {
           background: navScrolled ? "rgba(250,244,234,0.97)" : "rgba(250,244,234,0.85)",
           backdropFilter: "blur(10px)",
           boxShadow: navScrolled ? "0 2px 20px rgba(62,31,0,0.12)" : "none",
-          borderBottom: navScrolled ? "1px solid #E8D8C0" : "1px solid transparent",
+          borderBottom: "1px solid #E8D8C0",
         }}
       >
         <div className="max-w-6xl mx-auto px-6 flex items-center justify-between h-16">
-          {/* SVG Логотип */}
-          <button onClick={() => setActivePage("home")} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* Логотип */}
+          <button onClick={() => scrollTo(heroRef)} className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+            <svg width="32" height="32" viewBox="0 0 36 36" fill="none">
               <circle cx="18" cy="18" r="18" fill="#C17F4A"/>
               <path d="M10 24 Q14 16 18 20 Q22 24 26 14" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
               <ellipse cx="18" cy="26" rx="7" ry="2" fill="white" opacity="0.25"/>
-              <path d="M24 10 Q26 8 28 10" stroke="white" strokeWidth="1.5" strokeLinecap="round" fill="none"/>
             </svg>
-            <span style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: "1.3rem", color: "#3E1F00" }}>
-              Уют
-            </span>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, fontSize: "1.2rem", color: "#3E1F00" }}>Уют</span>
           </button>
 
-          {/* Десктоп меню */}
+          {/* Десктоп-ссылки */}
           <ul className="hidden md:flex items-center gap-1">
-            {navLinks.map((link, i) => (
-              <li key={link.key} style={{ animationDelay: `${i * 0.05}s` }}>
+            {navLinks.map((link) => (
+              <li key={link.label}>
                 <button
-                  onClick={() => setActivePage(link.key)}
-                  className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200 hover:scale-105"
-                  style={{
-                    color: activePage === link.key ? "white" : "#3E1F00",
-                    background: activePage === link.key ? "#C17F4A" : "transparent",
-                  }}
+                  onClick={() => scrollTo(link.ref)}
+                  className="px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 hover:bg-amber-100"
+                  style={{ color: "#3E1F00" }}
                 >
                   {link.label}
                 </button>
@@ -158,30 +168,37 @@ export default function Index() {
             ))}
           </ul>
 
-          {/* Мобильная кнопка */}
+          {/* Кнопка корзины */}
           <button
-            className="md:hidden p-2 rounded-lg"
-            style={{ color: "#3E1F00" }}
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            onClick={() => setCartOpen(true)}
+            className="relative flex items-center gap-2 px-4 py-2 rounded-full transition-all hover:scale-105"
+            style={{ background: "#C17F4A", color: "#FAF4EA" }}
           >
-            <Icon name={mobileMenuOpen ? "X" : "Menu"} size={24} />
+            <Icon name="ShoppingCart" size={18} />
+            <span className="text-sm font-semibold hidden sm:inline">Корзина</span>
+            {cartCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full text-xs font-bold flex items-center justify-center animate-scale-in"
+                style={{ background: "#3E1F00", color: "white" }}>
+                {cartCount}
+              </span>
+            )}
+          </button>
+
+          {/* Мобильное меню */}
+          <button className="md:hidden p-2 ml-2" style={{ color: "#3E1F00" }} onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+            <Icon name={mobileMenuOpen ? "X" : "Menu"} size={22} />
           </button>
         </div>
 
-        {/* Мобильное меню */}
         {mobileMenuOpen && (
           <div className="md:hidden animate-slide-down" style={{ background: "rgba(250,244,234,0.98)", borderTop: "1px solid #E8D8C0" }}>
             <ul className="flex flex-col p-4 gap-2">
               {navLinks.map((link) => (
-                <li key={link.key}>
+                <li key={link.label}>
                   <button
-                    onClick={() => { setActivePage(link.key); setMobileMenuOpen(false); }}
-                    className="w-full text-left px-4 py-3 rounded-xl transition-all duration-200"
-                    style={{
-                      color: activePage === link.key ? "white" : "#3E1F00",
-                      background: activePage === link.key ? "#C17F4A" : "#F5ECD7",
-                      fontWeight: 500,
-                    }}
+                    onClick={() => scrollTo(link.ref)}
+                    className="w-full text-left px-4 py-3 rounded-xl font-medium text-sm"
+                    style={{ background: "#F5ECD7", color: "#3E1F00" }}
                   >
                     {link.label}
                   </button>
@@ -192,615 +209,370 @@ export default function Index() {
         )}
       </nav>
 
-      {/* ==================== ГЛАВНАЯ ==================== */}
-      {activePage === "home" && (
-        <main>
-
-          {/* HERO */}
-          <section className="relative flex items-center justify-center min-h-screen overflow-hidden" style={{ paddingTop: "64px" }}>
-            <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{
-                backgroundImage: `url(https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/16d47531-c9ca-40f2-b031-679ac9b948d2.jpg)`,
-                filter: "brightness(0.55)",
-              }}
-            />
-            <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(62,31,0,0.3), rgba(62,31,0,0.65))" }} />
-
-            <div className="relative z-10 text-center px-6 animate-fade-in-up">
-              <p className="text-xs font-semibold tracking-widest uppercase mb-4 delay-100 animate-fade-in-up" style={{ color: "#EDD9B8", letterSpacing: "0.25em" }}>
-                добро пожаловать
-              </p>
-              <h1 className="text-5xl md:text-7xl font-black mb-6 delay-200 animate-fade-in-up" style={{ fontFamily: "'Playfair Display', serif", color: "#FAF4EA", lineHeight: 1.1, textShadow: "0 2px 30px rgba(0,0,0,0.4)" }}>
-                Кофейня<br />
-                <span style={{ color: "#EDD9B8" }}>Уют</span>
-              </h1>
-              <p className="text-lg md:text-xl mb-10 max-w-md mx-auto delay-300 animate-fade-in-up" style={{ color: "#EDD9B8", fontWeight: 300 }}>
-                Место, где каждая чашка — маленький праздник
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center delay-400 animate-fade-in-up">
-                <button
-                  onClick={() => setActivePage("menu")}
-                  className="px-8 py-4 rounded-full text-base font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl animate-pulse-soft"
-                  style={{ background: "#C17F4A", color: "#FAF4EA", boxShadow: "0 4px 20px rgba(193,127,74,0.5)" }}
-                >
-                  ☕ Твой кофе ждёт!
-                </button>
-                <button
-                  onClick={() => setActivePage("order")}
-                  className="px-8 py-4 rounded-full text-base font-semibold transition-all duration-300 hover:scale-105"
-                  style={{ background: "rgba(255,255,255,0.15)", color: "#FAF4EA", border: "2px solid rgba(255,255,255,0.5)", backdropFilter: "blur(4px)" }}
-                >
-                  🪑 Столик в один клик!
-                </button>
-              </div>
-            </div>
-
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce" style={{ color: "#EDD9B8", opacity: 0.7 }}>
-              <Icon name="ChevronDown" size={28} />
-            </div>
-          </section>
-
-          {/* КАТАЛОГ — лёгкий, со слайдером фото и строчным меню */}
-          <section className="py-14 px-6" style={{ background: "#FAF4EA" }}>
-            <div className="max-w-3xl mx-auto">
-              <h2 className="text-3xl font-bold text-center mb-1" style={{ fontFamily: "'Playfair Display', serif", color: "#3E1F00" }}>Меню</h2>
-              <p className="text-center text-sm mb-8" style={{ color: "#A07850" }}>Свежий кофе и домашняя выпечка каждый день</p>
-
-              {/* Фильтры-таблетки */}
-              <div className="flex justify-center gap-2 mb-8 flex-wrap">
-                {([
-                  { key: "coffee", label: "☕ Кофе" },
-                  { key: "pastry", label: "🥐 Выпечка" },
-                  { key: "tea",    label: "🍵 Чай" },
-                ] as { key: "coffee"|"pastry"|"tea"; label: string }[]).map((tab) => (
-                  <button
-                    key={tab.key}
-                    onClick={() => setMenuFilter(tab.key)}
-                    className="px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 hover:scale-105"
-                    style={{
-                      background: menuFilter === tab.key ? "#C17F4A" : "transparent",
-                      color: menuFilter === tab.key ? "#FAF4EA" : "#8B6040",
-                      border: menuFilter === tab.key ? "2px solid #C17F4A" : "2px solid #E8D8C0",
-                    }}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
-
-              {/* Фото-слайдер текущей категории */}
-              <div className="relative rounded-2xl overflow-hidden mb-8" style={{ height: "200px" }}>
-                {CATEGORY_PHOTOS[menuFilter].map((src, i) => (
-                  <img
-                    key={i}
-                    src={src}
-                    alt=""
-                    className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
-                    style={{ opacity: catPhotoIndex === i ? 1 : 0 }}
-                  />
-                ))}
-                {/* Стрелки */}
-                <button
-                  onClick={() => setCatPhotoIndex((catPhotoIndex - 1 + CATEGORY_PHOTOS[menuFilter].length) % CATEGORY_PHOTOS[menuFilter].length)}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center"
-                  style={{ background: "rgba(250,244,234,0.85)", color: "#3E1F00" }}
-                >
-                  <Icon name="ChevronLeft" size={16} />
-                </button>
-                <button
-                  onClick={() => setCatPhotoIndex((catPhotoIndex + 1) % CATEGORY_PHOTOS[menuFilter].length)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center"
-                  style={{ background: "rgba(250,244,234,0.85)", color: "#3E1F00" }}
-                >
-                  <Icon name="ChevronRight" size={16} />
-                </button>
-                {/* Точки */}
-                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
-                  {CATEGORY_PHOTOS[menuFilter].map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setCatPhotoIndex(i)}
-                      className="rounded-full transition-all duration-300"
-                      style={{ width: catPhotoIndex === i ? "20px" : "7px", height: "7px", background: catPhotoIndex === i ? "#C17F4A" : "rgba(255,255,255,0.7)" }}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              {/* Строчное меню — как в бумажном меню кафе */}
-              <div>
-                {MENU_ITEMS[menuFilter].map((item, i) => (
-                  <div
-                    key={item.name}
-                    className="flex items-baseline gap-2 py-3 transition-colors hover:px-2 rounded-lg"
-                    style={{ borderBottom: i < MENU_ITEMS[menuFilter].length - 1 ? "1px dashed #E0CDB0" : "none" }}
-                  >
-                    <span className="text-base" style={{ fontFamily: "'Georgia', serif", color: "#3E1F00", whiteSpace: "nowrap" }}>{item.name}</span>
-                    <span className="flex-1" style={{ borderBottom: "2px dotted #D4B896", marginBottom: "4px" }} />
-                    <span className="text-base font-bold flex-shrink-0" style={{ color: "#C17F4A", fontFamily: "Arial, sans-serif" }}>{item.price} ₽</span>
-                  </div>
-                ))}
-              </div>
-
-              <div className="text-center mt-6">
-                <button
-                  onClick={() => setActivePage("menu")}
-                  className="text-sm font-semibold transition-all hover:opacity-70"
-                  style={{ color: "#C17F4A" }}
-                >
-                  Посмотреть полное меню →
-                </button>
-              </div>
-            </div>
-          </section>
-
-          {/* БРОНИРОВАНИЕ */}
-          <section className="py-16 px-6" style={{ background: "#F5ECD7" }}>
-            <div className="max-w-5xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', serif", color: "#3E1F00" }}>Забронируйте столик</h2>
-              <p className="mb-10 text-sm" style={{ color: "#8B6040" }}>При бронировании на будний день — комплимент от шеф-кондитера в подарок!</p>
-
-              <div className="grid md:grid-cols-2 gap-8">
-                <div className="rounded-3xl p-8 shadow-md" style={{ background: "white" }}>
-                  {bookingSuccess ? (
-                    <div className="animate-scale-in text-center py-8">
-                      <div className="text-5xl mb-4">🎉</div>
-                      <h3 className="text-xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', serif", color: "#3E1F00" }}>Столик забронирован!</h3>
-                      <p style={{ color: "#8B6040" }}>Ждём вас. Комплимент уже готовится!</p>
-                    </div>
-                  ) : (
-                    <form onSubmit={handleBooking} className="space-y-4">
-                      <div>
-                        <label className="text-xs font-semibold uppercase tracking-wide mb-1 block" style={{ color: "#8B6040" }}>Ваше ФИО</label>
-                        <input
-                          type="text" required value={booking.name}
-                          onChange={(e) => setBooking({ ...booking, name: e.target.value })}
-                          className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all focus:ring-2 focus:ring-amber-400"
-                          style={{ background: "#FAF4EA", border: "1px solid #E8D8C0", color: "#3E1F00" }}
-                          placeholder="Иванов Иван Иванович"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-xs font-semibold uppercase tracking-wide mb-1 block" style={{ color: "#8B6040" }}>Телефон</label>
-                        <input
-                          type="tel" required value={booking.phone}
-                          onChange={(e) => setBooking({ ...booking, phone: e.target.value })}
-                          className="w-full px-4 py-3 rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-400"
-                          style={{ background: "#FAF4EA", border: "1px solid #E8D8C0", color: "#3E1F00" }}
-                          placeholder="+7 (___) ___-__-__"
-                        />
-                      </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <label className="text-xs font-semibold uppercase tracking-wide mb-1 block" style={{ color: "#8B6040" }}>Дата</label>
-                          <input
-                            type="date" required value={booking.date}
-                            onChange={(e) => setBooking({ ...booking, date: e.target.value })}
-                            className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-                            style={{ background: "#FAF4EA", border: "1px solid #E8D8C0", color: "#3E1F00" }}
-                          />
-                        </div>
-                        <div>
-                          <label className="text-xs font-semibold uppercase tracking-wide mb-1 block" style={{ color: "#8B6040" }}>Время</label>
-                          <input
-                            type="time" required value={booking.time}
-                            onChange={(e) => setBooking({ ...booking, time: e.target.value })}
-                            className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-                            style={{ background: "#FAF4EA", border: "1px solid #E8D8C0", color: "#3E1F00" }}
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="text-xs font-semibold uppercase tracking-wide mb-1 block" style={{ color: "#8B6040" }}>Количество гостей</label>
-                        <select
-                          required value={booking.guests}
-                          onChange={(e) => setBooking({ ...booking, guests: e.target.value })}
-                          className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-                          style={{ background: "#FAF4EA", border: "1px solid #E8D8C0", color: "#3E1F00" }}
-                        >
-                          <option value="">Выберите...</option>
-                          {[1,2,3,4,5,6,7,8].map(n => (
-                            <option key={n} value={n}>{n} {n === 1 ? "гость" : n < 5 ? "гостя" : "гостей"}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <button
-                        type="submit"
-                        className="w-full py-4 rounded-xl font-semibold text-sm transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
-                        style={{ background: "#C17F4A", color: "#FAF4EA" }}
-                      >
-                        Забронировать столик
-                      </button>
-                    </form>
-                  )}
-                </div>
-
-                <div className="flex flex-col gap-4">
-                  {[
-                    { icon: "Gift", title: "Комплимент в подарок", desc: "При бронировании на будний день — выпечка от шеф-кондитера" },
-                    { icon: "Coffee", title: "Свежий кофе", desc: "Зерна обжариваются еженедельно для максимального вкуса" },
-                    { icon: "Home", title: "Домашняя выпечка", desc: "Готовим каждый день — никаких заморозок" },
-                    { icon: "Sun", title: "Уютная атмосфера", desc: "Место, где хочется остаться подольше" },
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-start gap-4 p-5 rounded-2xl shadow-sm transition-all hover:shadow-md hover:scale-[1.01]" style={{ background: "white" }}>
-                      <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "#F5ECD7" }}>
-                        <Icon name={item.icon} size={20} style={{ color: "#C17F4A" }} />
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-sm mb-1" style={{ color: "#3E1F00" }}>{item.title}</h4>
-                        <p className="text-xs" style={{ color: "#8B6040" }}>{item.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* ЗАКАЗ (краткий) */}
-          <section className="py-16 px-6" style={{ background: "#FAF4EA" }}>
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', serif", color: "#3E1F00" }}>Оформить заказ</h2>
-              <p className="text-sm mb-10" style={{ color: "#8B6040" }}>Выберите параметры, добавьте позиции из меню и оформите</p>
-
-              <div className="rounded-3xl p-8 shadow-md" style={{ background: "white", border: "2px solid #E8D8C0" }}>
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  {[
-                    { key: "pickup", label: "С собой", sub: "Заберите сами", icon: "ShoppingBag" },
-                    { key: "delivery", label: "Доставка", sub: "Курьер привезёт", icon: "Truck" },
-                  ].map((type) => (
-                    <button
-                      key={type.key}
-                      onClick={() => setOrderType(type.key as "pickup" | "delivery")}
-                      className="p-5 rounded-2xl flex flex-col items-center gap-2 transition-all duration-300 hover:scale-[1.02]"
-                      style={{
-                        background: orderType === type.key ? "#6B3A2A" : "#F5ECD7",
-                        color: orderType === type.key ? "#FAF4EA" : "#3E1F00",
-                        boxShadow: orderType === type.key ? "0 4px 20px rgba(107,58,42,0.3)" : "none",
-                      }}
-                    >
-                      <Icon name={type.icon} size={28} />
-                      <span className="font-bold">{type.label}</span>
-                      <span className="text-xs opacity-75">{type.sub}</span>
-                    </button>
-                  ))}
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-4 mb-6">
-                  <input
-                    type="text" value={orderName} onChange={(e) => setOrderName(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-                    style={{ background: "#FAF4EA", border: "1px solid #E8D8C0", color: "#3E1F00" }}
-                    placeholder="Ваше имя"
-                  />
-                  <input
-                    type="tel" value={orderPhone} onChange={(e) => setOrderPhone(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl text-sm outline-none"
-                    style={{ background: "#FAF4EA", border: "1px solid #E8D8C0", color: "#3E1F00" }}
-                    placeholder="+7(___) ___-__-__"
-                  />
-                </div>
-
-                {orderType === "delivery" && (
-                  <div className="mb-6 p-4 rounded-2xl animate-scale-in" style={{ background: "#F5ECD7", border: "1px solid #E8D8C0" }}>
-                    <h4 className="font-bold text-sm mb-3 flex items-center gap-2" style={{ color: "#3E1F00" }}>
-                      <Icon name="Truck" size={14} style={{ color: "#C17F4A" }} />
-                      Доставка и оплата
-                    </h4>
-                    <div className="grid sm:grid-cols-2 gap-3 text-xs" style={{ color: "#6B3A2A" }}>
-                      <div className="flex items-start gap-2"><Icon name="MapPin" size={12} style={{ color: "#C17F4A", marginTop: 2, flexShrink: 0 }} /><span>От 199 ₽, бесплатно при заказе от 1500 ₽</span></div>
-                      <div className="flex items-start gap-2"><Icon name="Clock" size={12} style={{ color: "#C17F4A", marginTop: 2, flexShrink: 0 }} /><span>30–60 минут</span></div>
-                      <div className="flex items-start gap-2"><Icon name="CreditCard" size={12} style={{ color: "#C17F4A", marginTop: 2, flexShrink: 0 }} /><span>Картой онлайн или наличными</span></div>
-                      <div className="flex items-start gap-2"><Icon name="Smartphone" size={12} style={{ color: "#C17F4A", marginTop: 2, flexShrink: 0 }} /><span>СБП, Apple Pay, Google Pay</span></div>
-                    </div>
-                  </div>
-                )}
-
-                <button
-                  onClick={() => setActivePage("menu")}
-                  className="w-full py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
-                  style={{ background: "#C17F4A", color: "#FAF4EA" }}
-                >
-                  Перейти к меню и выбрать позиции →
-                </button>
-              </div>
-            </div>
-          </section>
-
-          {/* МАСТЕР-КЛАССЫ */}
-          <section className="py-16 px-6" style={{ background: "#F5ECD7" }}>
-            <div className="max-w-5xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-12 items-center mb-12">
-                <div>
-                  <p className="text-sm font-semibold uppercase tracking-widest mb-2" style={{ color: "#C17F4A", letterSpacing: "0.2em" }}>мастер-классы</p>
-                  <h2 className="text-4xl md:text-5xl font-black mb-4 leading-tight" style={{ fontFamily: "'Playfair Display', serif", color: "#3E1F00" }}>
-                    Научитесь<br />
-                    <span style={{ color: "#C17F4A" }}>латте-арт</span>
-                  </h2>
-                  <p className="text-base mb-6" style={{ color: "#6B3A2A", fontWeight: 400 }}>
-                    Наши бариста с опытом 10+ лет научат вас создавать настоящие кофейные шедевры. Весело, полезно и очень вкусно.
-                  </p>
-                  <button
-                    onClick={() => setActivePage("masterclass")}
-                    className="px-8 py-3 rounded-full font-semibold text-sm transition-all hover:scale-105"
-                    style={{ background: "#C17F4A", color: "#FAF4EA" }}
-                  >
-                    Все мастер-классы
-                  </button>
-                </div>
-                <div className="rounded-3xl overflow-hidden shadow-xl">
-                  <img
-                    src="https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/6b8d3310-b239-4068-b90d-0a8eed664a68.jpg"
-                    alt="Латте-арт"
-                    className="w-full h-64 object-cover"
-                  />
-                </div>
-              </div>
-
-              <div className="grid md:grid-cols-3 gap-6">
-                {MASTERCLASSES.map((mc, i) => (
-                  <div key={i} className="rounded-3xl overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-1" style={{ background: "white" }}>
-                    <img src={mc.img} alt={mc.title} className="w-full h-40 object-cover" />
-                    <div className="p-5">
-                      <span className="text-xs font-semibold px-3 py-1 rounded-full" style={{ background: "#F5ECD7", color: "#C17F4A" }}>{mc.level}</span>
-                      <h3 className="font-bold mt-3 mb-1" style={{ color: "#3E1F00", fontFamily: "'Playfair Display', serif" }}>{mc.title}</h3>
-                      <p className="text-xs mb-4" style={{ color: "#8B6040" }}>{mc.desc}</p>
-                      <div className="flex items-center justify-between">
-                        <span className="font-bold text-lg" style={{ color: "#C17F4A" }}>{mc.price.toLocaleString()} ₽</span>
-                        <button className="px-4 py-2 rounded-full text-xs font-semibold transition-all hover:scale-105" style={{ background: "#C17F4A", color: "#FAF4EA" }}>
-                          Записаться
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        </main>
-      )}
-
-      {/* ==================== МЕНЮ ==================== */}
-      {activePage === "menu" && (
-        <main style={{ paddingTop: "64px" }}>
-          <div className="py-16 px-6 max-w-5xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-black text-center mb-2 animate-fade-in-up" style={{ fontFamily: "'Playfair Display', serif", color: "#3E1F00" }}>Наше меню</h1>
-            <p className="text-center text-sm mb-10 animate-fade-in-up delay-100" style={{ color: "#8B6040" }}>Отборные сорта кофе и свежая выпечка собственного производства</p>
-
-            {/* Фильтр меню */}
-            <div className="flex justify-center gap-3 mb-10 flex-wrap animate-fade-in-up delay-200">
-              {[
-                { key: "coffee", label: "☕ Кофе" },
-                { key: "pastry", label: "🥐 Выпечка" },
-                { key: "tea",    label: "🍵 Чай и напитки" },
-              ].map((tab) => (
-                <button
-                  key={tab.key}
-                  onClick={() => setMenuFilter(tab.key as "coffee" | "pastry" | "tea")}
-                  className="px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 hover:scale-105"
-                  style={{
-                    background: menuFilter === tab.key ? "#C17F4A" : "#F5ECD7",
-                    color: menuFilter === tab.key ? "#FAF4EA" : "#3E1F00",
-                    boxShadow: menuFilter === tab.key ? "0 3px 14px rgba(193,127,74,0.35)" : "none",
-                  }}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 animate-fade-in">
-              {MENU_ITEMS[menuFilter].map((item, i) => (
-                <div
-                  key={item.name}
-                  className="p-5 rounded-2xl shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1"
-                  style={{ background: "white", animationDelay: `${i * 0.07}s` }}
-                >
-                  <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-bold" style={{ color: "#3E1F00", fontFamily: "'Playfair Display', serif" }}>{item.name}</h3>
-                    <span className="font-bold text-sm ml-2 flex-shrink-0" style={{ color: "#C17F4A" }}>{item.price} ₽</span>
-                  </div>
-                  <p className="text-xs" style={{ color: "#8B6040" }}>{item.desc}</p>
-                  <button
-                    className="mt-4 w-full py-2.5 rounded-xl text-xs font-semibold transition-all hover:scale-[1.02]"
-                    style={{ background: "#F5ECD7", color: "#6B3A2A" }}
-                  >
-                    + Добавить в заказ
-                  </button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </main>
-      )}
-
-      {/* ==================== МАСТЕР-КЛАССЫ ==================== */}
-      {activePage === "masterclass" && (
-        <main style={{ paddingTop: "64px" }}>
-          <div className="py-16 px-6 max-w-5xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-black text-center mb-2 animate-fade-in-up" style={{ fontFamily: "'Playfair Display', serif", color: "#3E1F00" }}>Мастер-классы</h1>
-            <p className="text-center text-sm mb-10 animate-fade-in-up delay-100" style={{ color: "#8B6040" }}>Наши бариста с опытом 10+ лет научат вас мастерству кофе</p>
-            <div className="grid md:grid-cols-3 gap-6">
-              {MASTERCLASSES.map((mc, i) => (
-                <div key={i} className="rounded-3xl overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in-up" style={{ background: "white", animationDelay: `${i * 0.15}s` }}>
-                  <img src={mc.img} alt={mc.title} className="w-full h-48 object-cover" />
-                  <div className="p-6">
-                    <span className="text-xs font-semibold px-3 py-1 rounded-full" style={{ background: "#F5ECD7", color: "#C17F4A" }}>{mc.level}</span>
-                    <h3 className="text-lg font-bold mt-3 mb-2" style={{ color: "#3E1F00", fontFamily: "'Playfair Display', serif" }}>{mc.title}</h3>
-                    <p className="text-sm mb-5" style={{ color: "#8B6040" }}>{mc.desc}</p>
-                    <div className="flex items-center justify-between">
-                      <span className="font-black text-2xl" style={{ color: "#C17F4A" }}>{mc.price.toLocaleString()} ₽</span>
-                      <button className="px-5 py-2.5 rounded-full text-sm font-semibold transition-all hover:scale-105 hover:shadow-md" style={{ background: "#C17F4A", color: "#FAF4EA" }}>
-                        Записаться
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </main>
-      )}
-
-      {/* ==================== ЗАКАЗ ==================== */}
-      {activePage === "order" && (
-        <main style={{ paddingTop: "64px" }}>
-          <div className="py-16 px-6 max-w-3xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-black text-center mb-2 animate-fade-in-up" style={{ fontFamily: "'Playfair Display', serif", color: "#3E1F00" }}>Оформить заказ</h1>
-            <p className="text-center text-sm mb-10 animate-fade-in-up delay-100" style={{ color: "#8B6040" }}>Выберите параметры, добавьте позиции из меню и оформите</p>
-
-            <div className="rounded-3xl p-8 shadow-md animate-scale-in" style={{ background: "white", border: "2px solid #E8D8C0" }}>
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                {[
-                  { key: "pickup", label: "С собой", sub: "Заберите сами", icon: "ShoppingBag" },
-                  { key: "delivery", label: "Доставка", sub: "Курьер привезёт", icon: "Truck" },
-                ].map((type) => (
-                  <button
-                    key={type.key}
-                    onClick={() => setOrderType(type.key as "pickup" | "delivery")}
-                    className="p-5 rounded-2xl flex flex-col items-center gap-2 transition-all duration-300 hover:scale-[1.02]"
-                    style={{
-                      background: orderType === type.key ? "#6B3A2A" : "#F5ECD7",
-                      color: orderType === type.key ? "#FAF4EA" : "#3E1F00",
-                      boxShadow: orderType === type.key ? "0 4px 20px rgba(107,58,42,0.3)" : "none",
-                    }}
-                  >
-                    <Icon name={type.icon} size={28} />
-                    <span className="font-bold">{type.label}</span>
-                    <span className="text-xs opacity-75">{type.sub}</span>
-                  </button>
-                ))}
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-4 mb-6">
-                <input type="text" placeholder="Ваше имя" className="w-full px-4 py-3 rounded-xl text-sm outline-none" style={{ background: "#FAF4EA", border: "1px solid #E8D8C0", color: "#3E1F00" }} />
-                <input type="tel" placeholder="+7(___) ___-__-__" className="w-full px-4 py-3 rounded-xl text-sm outline-none" style={{ background: "#FAF4EA", border: "1px solid #E8D8C0", color: "#3E1F00" }} />
-              </div>
-
-              {/* Блок доставки и оплаты */}
-              <div className="mb-6 p-5 rounded-2xl" style={{ background: "#FAF4EA", border: "1px solid #E8D8C0" }}>
-                <h4 className="font-bold mb-4 flex items-center gap-2" style={{ color: "#3E1F00" }}>
-                  <Icon name="Info" size={16} style={{ color: "#C17F4A" }} />
-                  Доставка и способы оплаты
-                </h4>
-                <div className="grid sm:grid-cols-2 gap-4">
-                  {[
-                    { icon: "Truck", title: "Доставка по городу", desc: "от 199 ₽, бесплатно при заказе от 1500 ₽" },
-                    { icon: "Clock", title: "Время доставки", desc: "30–60 минут в зависимости от адреса" },
-                    { icon: "CreditCard", title: "Банковская карта", desc: "Visa, Mastercard, МИР — онлайн или курьеру" },
-                    { icon: "Smartphone", title: "СБП и Pay-сервисы", desc: "Apple Pay, Google Pay, SberPay" },
-                    { icon: "Banknote", title: "Наличными", desc: "Курьеру при получении, сдача до 5000 ₽" },
-                    { icon: "ShoppingBag", title: "С собой", desc: "Готовим к вашему приходу за 10–15 мин" },
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-start gap-3">
-                      <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "#F5ECD7" }}>
-                        <Icon name={item.icon} size={14} style={{ color: "#C17F4A" }} />
-                      </div>
-                      <div>
-                        <p className="text-xs font-semibold" style={{ color: "#3E1F00" }}>{item.title}</p>
-                        <p className="text-xs" style={{ color: "#8B6040" }}>{item.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <button
-                onClick={() => setActivePage("menu")}
-                className="w-full py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-[1.02] hover:shadow-lg"
-                style={{ background: "#C17F4A", color: "#FAF4EA" }}
-              >
-                Перейти к меню и выбрать позиции →
-              </button>
-            </div>
-          </div>
-        </main>
-      )}
-
-      {/* ==================== КОНТАКТЫ ==================== */}
-      {activePage === "contacts" && (
-        <main style={{ paddingTop: "64px" }}>
-          <div className="py-16 px-6 max-w-5xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-black text-center mb-2 animate-fade-in-up" style={{ fontFamily: "'Playfair Display', serif", color: "#3E1F00" }}>Контакты</h1>
-            <p className="text-center text-sm mb-10 animate-fade-in-up delay-100" style={{ color: "#8B6040" }}>Приходите — всегда рады гостям!</p>
-
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="space-y-4 animate-fade-in-up delay-200">
-                {[
-                  { icon: "MapPin", title: "Адрес", val: "ул. Кофейная, 15, 2 этаж" },
-                  { icon: "Clock", title: "Режим работы", val: "Пн–Пт: 8:00–22:00\nСб–Вс: 9:00–23:00" },
-                  { icon: "Phone", title: "Телефон", val: "+7 (999) 999-99-99" },
-                  { icon: "Mail", title: "Email", val: "hello@coffee-uyt.ru" },
-                  { icon: "MessageCircle", title: "Instagram", val: "@coffee_uyt" },
-                ].map((item) => (
-                  <div key={item.title} className="flex items-start gap-4 p-5 rounded-2xl shadow-sm transition-all hover:shadow-md" style={{ background: "white" }}>
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "#F5ECD7" }}>
-                      <Icon name={item.icon} size={20} style={{ color: "#C17F4A" }} />
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold uppercase tracking-wide mb-1" style={{ color: "#8B6040" }}>{item.title}</p>
-                      <p className="font-medium whitespace-pre-line text-sm" style={{ color: "#3E1F00" }}>{item.val}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="rounded-3xl overflow-hidden shadow-md animate-fade-in-up delay-300 flex items-center justify-center" style={{ minHeight: "400px", background: "linear-gradient(135deg, #F5ECD7 0%, #EDD9B8 100%)" }}>
-                <div className="text-center p-8">
-                  <div className="text-7xl mb-4">📍</div>
-                  <p className="font-bold text-xl mb-2" style={{ color: "#3E1F00", fontFamily: "'Playfair Display', serif" }}>Кофейня Уют</p>
-                  <p className="text-sm" style={{ color: "#6B3A2A" }}>ул. Кофейная, 15</p>
-                  <p className="text-xs mt-2" style={{ color: "#8B6040" }}>Центр города · 2 этаж</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </main>
-      )}
-
-      {/* ==================== ФУТЕР ==================== */}
-      <footer className="py-10 px-6" style={{ background: "#3E1F00" }}>
-        <div className="max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center gap-2 mb-3">
-                <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
-                  <circle cx="18" cy="18" r="18" fill="#C17F4A"/>
-                  <path d="M10 24 Q14 16 18 20 Q22 24 26 14" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
-                </svg>
-                <span style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, color: "#FAF4EA", fontSize: "1.1rem" }}>Уют</span>
-              </div>
-              <p className="text-xs" style={{ color: "#C17F4A" }}>Приходите к нам за чашечкой ароматного кофе</p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-sm mb-3" style={{ color: "#EDD9B8" }}>Режим работы</h4>
-              <p className="text-xs leading-relaxed" style={{ color: "#C17F4A" }}>Пн–Пт: 8:00–22:00<br />Сб–Вс: 9:00–23:00</p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-sm mb-3" style={{ color: "#EDD9B8" }}>Телефон</h4>
-              <p className="text-xs" style={{ color: "#C17F4A" }}>+7 (999) 999-99-99</p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-sm mb-3" style={{ color: "#EDD9B8" }}>Контакты</h4>
-              <p className="text-xs" style={{ color: "#C17F4A" }}>hello@coffee-uyt.ru</p>
-            </div>
-          </div>
-          <div style={{ borderTop: "1px solid rgba(193,127,74,0.3)" }} className="pt-6 text-center">
-            <p className="text-xs" style={{ color: "#8B6040" }}>© 2024 Кофейня Уют. Все права защищены.</p>
+      {/* ==================== HERO ==================== */}
+      <section ref={heroRef} className="relative flex items-center justify-center min-h-screen overflow-hidden" style={{ paddingTop: "64px" }}>
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url(https://cdn.poehali.dev/projects/cd58137d-b60f-4b9d-aa74-65a5f431f22a/files/16d47531-c9ca-40f2-b031-679ac9b948d2.jpg)`,
+            filter: "brightness(0.52)",
+          }}
+        />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(62,31,0,0.25), rgba(62,31,0,0.65))" }} />
+        <div className="relative z-10 text-center px-6 animate-fade-in-up">
+          <p className="text-xs font-semibold tracking-widest uppercase mb-4" style={{ color: "#EDD9B8", letterSpacing: "0.25em" }}>добро пожаловать</p>
+          <h1 className="text-5xl md:text-7xl font-black mb-5" style={{ fontFamily: "'Playfair Display', serif", color: "#FAF4EA", lineHeight: 1.1, textShadow: "0 2px 30px rgba(0,0,0,0.4)" }}>
+            Кофейня<br /><span style={{ color: "#EDD9B8" }}>Уют</span>
+          </h1>
+          <p className="text-lg mb-10 max-w-md mx-auto" style={{ color: "#EDD9B8", fontWeight: 300 }}>
+            Место, где каждая чашка — маленький праздник
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button
+              onClick={() => scrollTo(menuRef)}
+              className="px-8 py-4 rounded-full text-base font-semibold transition-all duration-300 hover:scale-105"
+              style={{ background: "#C17F4A", color: "#FAF4EA", boxShadow: "0 4px 20px rgba(193,127,74,0.5)" }}
+            >
+              ☕ Смотреть меню
+            </button>
+            <button
+              onClick={() => scrollTo(bookingRef)}
+              className="px-8 py-4 rounded-full text-base font-semibold transition-all duration-300 hover:scale-105"
+              style={{ background: "rgba(255,255,255,0.15)", color: "#FAF4EA", border: "2px solid rgba(255,255,255,0.5)" }}
+            >
+              🪑 Забронировать столик
+            </button>
           </div>
         </div>
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce" style={{ color: "#EDD9B8", opacity: 0.7 }}>
+          <Icon name="ChevronDown" size={28} />
+        </div>
+      </section>
+
+      {/* ==================== МЕНЮ ==================== */}
+      <section ref={menuRef} className="py-16 px-6" style={{ background: "#FAF4EA" }}>
+        <div className="max-w-2xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-1" style={{ fontFamily: "'Playfair Display', serif", color: "#3E1F00" }}>Меню</h2>
+          <p className="text-center text-sm mb-8" style={{ color: "#A07850" }}>Нажмите «+» чтобы добавить в корзину</p>
+
+          {/* Фильтры */}
+          <div className="flex justify-center gap-2 mb-7 flex-wrap">
+            {([
+              { key: "coffee", label: "☕ Кофе" },
+              { key: "pastry", label: "🥐 Выпечка" },
+              { key: "tea", label: "🍵 Чай" },
+            ] as { key: "coffee"|"pastry"|"tea"; label: string }[]).map((tab) => (
+              <button
+                key={tab.key}
+                onClick={() => setMenuFilter(tab.key)}
+                className="px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 hover:scale-105"
+                style={{
+                  background: menuFilter === tab.key ? "#C17F4A" : "transparent",
+                  color: menuFilter === tab.key ? "#FAF4EA" : "#8B6040",
+                  border: menuFilter === tab.key ? "2px solid #C17F4A" : "2px solid #E8D8C0",
+                }}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Фото-слайдер */}
+          <div className="relative rounded-2xl overflow-hidden mb-7" style={{ height: "180px" }}>
+            {CATEGORY_PHOTOS[menuFilter].map((src, i) => (
+              <img key={i} src={src} alt="" className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
+                style={{ opacity: catPhotoIndex === i ? 1 : 0 }} />
+            ))}
+            <button
+              onClick={() => setCatPhotoIndex((catPhotoIndex - 1 + CATEGORY_PHOTOS[menuFilter].length) % CATEGORY_PHOTOS[menuFilter].length)}
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center"
+              style={{ background: "rgba(250,244,234,0.88)", color: "#3E1F00" }}
+            ><Icon name="ChevronLeft" size={16} /></button>
+            <button
+              onClick={() => setCatPhotoIndex((catPhotoIndex + 1) % CATEGORY_PHOTOS[menuFilter].length)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full flex items-center justify-center"
+              style={{ background: "rgba(250,244,234,0.88)", color: "#3E1F00" }}
+            ><Icon name="ChevronRight" size={16} /></button>
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+              {CATEGORY_PHOTOS[menuFilter].map((_, i) => (
+                <button key={i} onClick={() => setCatPhotoIndex(i)} className="rounded-full transition-all duration-300"
+                  style={{ width: catPhotoIndex === i ? "20px" : "7px", height: "7px", background: catPhotoIndex === i ? "#C17F4A" : "rgba(255,255,255,0.7)" }} />
+              ))}
+            </div>
+          </div>
+
+          {/* Строчное меню с кнопкой «+» */}
+          <div className="rounded-2xl overflow-hidden" style={{ border: "1px solid #E8D8C0" }}>
+            {MENU_ITEMS[menuFilter].map((item, i) => {
+              const inCart = cart.find((c) => c.name === item.name);
+              const isJust = justAdded === item.name;
+              return (
+                <div
+                  key={item.name}
+                  className="flex items-center gap-3 px-5 py-3.5 transition-colors"
+                  style={{
+                    background: isJust ? "#FFF3E8" : i % 2 === 0 ? "white" : "#FDFAF5",
+                    borderBottom: i < MENU_ITEMS[menuFilter].length - 1 ? "1px solid #F0E4D0" : "none",
+                  }}
+                >
+                  <span className="text-xl">{item.emoji}</span>
+                  <span className="flex-1 text-sm font-medium" style={{ color: "#3E1F00", fontFamily: "'Georgia', serif" }}>{item.name}</span>
+                  <span className="text-sm font-bold mr-2" style={{ color: "#C17F4A" }}>{item.price} ₽</span>
+                  {inCart && (
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ background: "#F5ECD7", color: "#6B3A2A" }}>
+                      ×{inCart.qty}
+                    </span>
+                  )}
+                  <button
+                    onClick={() => addToCart(item)}
+                    className="w-8 h-8 rounded-full flex items-center justify-center transition-all hover:scale-110 flex-shrink-0"
+                    style={{ background: isJust ? "#3E1F00" : "#C17F4A", color: "white" }}
+                  >
+                    <Icon name={isJust ? "Check" : "Plus"} size={16} />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Мини-сообщение после добавления */}
+          {justAdded && (
+            <div className="mt-4 text-center animate-fade-in text-sm font-semibold" style={{ color: "#C17F4A" }}>
+              ✓ {justAdded} добавлен в корзину
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ==================== МАСТЕР-КЛАССЫ ==================== */}
+      <section ref={mcRef} className="py-16 px-6" style={{ background: "#F5ECD7" }}>
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-1" style={{ fontFamily: "'Playfair Display', serif", color: "#3E1F00" }}>Мастер-классы</h2>
+          <p className="text-center text-sm mb-10" style={{ color: "#A07850" }}>Бариста с опытом 10+ лет научат вас мастерству</p>
+          <div className="grid md:grid-cols-3 gap-6">
+            {MASTERCLASSES.map((mc, i) => (
+              <div key={i} className="rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1" style={{ background: "white" }}>
+                <img src={mc.img} alt={mc.title} className="w-full h-40 object-cover" />
+                <div className="p-5">
+                  <span className="text-xs font-semibold px-3 py-1 rounded-full" style={{ background: "#F5ECD7", color: "#C17F4A" }}>{mc.level}</span>
+                  <h3 className="font-bold mt-3 mb-3" style={{ color: "#3E1F00", fontFamily: "'Playfair Display', serif" }}>{mc.title}</h3>
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-lg" style={{ color: "#C17F4A" }}>{mc.price.toLocaleString()} ₽</span>
+                    <button className="px-4 py-2 rounded-full text-xs font-semibold transition-all hover:scale-105" style={{ background: "#C17F4A", color: "#FAF4EA" }}>
+                      Записаться
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== БРОНИРОВАНИЕ ==================== */}
+      <section ref={bookingRef} className="py-16 px-6" style={{ background: "#FAF4EA" }}>
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold mb-1" style={{ fontFamily: "'Playfair Display', serif", color: "#3E1F00" }}>Забронировать столик</h2>
+          <p className="text-sm mb-10" style={{ color: "#A07850" }}>При бронировании на будний день — комплимент от шеф-кондитера!</p>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="rounded-2xl p-7" style={{ background: "white", border: "1px solid #E8D8C0" }}>
+              {bookingSuccess ? (
+                <div className="text-center py-8 animate-scale-in">
+                  <div className="text-5xl mb-4">🎉</div>
+                  <h3 className="text-xl font-bold mb-2" style={{ fontFamily: "'Playfair Display', serif", color: "#3E1F00" }}>Столик забронирован!</h3>
+                  <p style={{ color: "#8B6040", fontSize: "14px" }}>Ждём вас. Комплимент уже готовится!</p>
+                </div>
+              ) : (
+                <form onSubmit={handleBooking} className="space-y-4">
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wide mb-1 block" style={{ color: "#8B6040" }}>Ваше имя</label>
+                    <input type="text" required value={booking.name} onChange={(e) => setBooking({ ...booking, name: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl text-sm outline-none" style={{ background: "#FAF4EA", border: "1px solid #E8D8C0", color: "#3E1F00" }} placeholder="Иван Иванов" />
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wide mb-1 block" style={{ color: "#8B6040" }}>Телефон</label>
+                    <input type="tel" required value={booking.phone} onChange={(e) => setBooking({ ...booking, phone: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl text-sm outline-none" style={{ background: "#FAF4EA", border: "1px solid #E8D8C0", color: "#3E1F00" }} placeholder="+7 (___) ___-__-__" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-xs font-semibold uppercase tracking-wide mb-1 block" style={{ color: "#8B6040" }}>Дата</label>
+                      <input type="date" required value={booking.date} onChange={(e) => setBooking({ ...booking, date: e.target.value })}
+                        className="w-full px-4 py-3 rounded-xl text-sm outline-none" style={{ background: "#FAF4EA", border: "1px solid #E8D8C0", color: "#3E1F00" }} />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold uppercase tracking-wide mb-1 block" style={{ color: "#8B6040" }}>Время</label>
+                      <input type="time" required value={booking.time} onChange={(e) => setBooking({ ...booking, time: e.target.value })}
+                        className="w-full px-4 py-3 rounded-xl text-sm outline-none" style={{ background: "#FAF4EA", border: "1px solid #E8D8C0", color: "#3E1F00" }} />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-xs font-semibold uppercase tracking-wide mb-1 block" style={{ color: "#8B6040" }}>Гости</label>
+                    <select required value={booking.guests} onChange={(e) => setBooking({ ...booking, guests: e.target.value })}
+                      className="w-full px-4 py-3 rounded-xl text-sm outline-none" style={{ background: "#FAF4EA", border: "1px solid #E8D8C0", color: "#3E1F00" }}>
+                      <option value="">Выберите...</option>
+                      {[1,2,3,4,5,6,7,8].map(n => <option key={n} value={n}>{n} {n===1?"гость":n<5?"гостя":"гостей"}</option>)}
+                    </select>
+                  </div>
+                  <button type="submit" className="w-full py-3.5 rounded-xl font-semibold text-sm transition-all hover:scale-[1.02]" style={{ background: "#C17F4A", color: "#FAF4EA" }}>
+                    Забронировать
+                  </button>
+                </form>
+              )}
+            </div>
+            <div className="flex flex-col gap-3">
+              {[
+                { icon: "Gift", title: "Комплимент в подарок", desc: "Выпечка от шеф-кондитера в будний день" },
+                { icon: "Coffee", title: "Свежий кофе", desc: "Зерна обжариваются еженедельно" },
+                { icon: "Sun", title: "Уютная атмосфера", desc: "Место, где хочется остаться подольше" },
+                { icon: "Clock", title: "Работаем каждый день", desc: "Пн–Пт 8:00–22:00, Сб–Вс 9:00–23:00" },
+              ].map((item, i) => (
+                <div key={i} className="flex items-start gap-3 p-4 rounded-xl" style={{ background: "white", border: "1px solid #E8D8C0" }}>
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "#F5ECD7" }}>
+                    <Icon name={item.icon} size={18} style={{ color: "#C17F4A" }} />
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold" style={{ color: "#3E1F00" }}>{item.title}</p>
+                    <p className="text-xs" style={{ color: "#8B6040" }}>{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== КОНТАКТЫ ==================== */}
+      <section ref={contactsRef} className="py-16 px-6" style={{ background: "#F5ECD7" }}>
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-1" style={{ fontFamily: "'Playfair Display', serif", color: "#3E1F00" }}>Контакты</h2>
+          <p className="text-center text-sm mb-10" style={{ color: "#A07850" }}>Приходите — всегда рады гостям!</p>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="flex flex-col gap-3">
+              {[
+                { icon: "MapPin", title: "Адрес", val: "ул. Кофейная, 15, 2 этаж" },
+                { icon: "Clock", title: "Режим работы", val: "Пн–Пт: 8:00–22:00\nСб–Вс: 9:00–23:00" },
+                { icon: "Phone", title: "Телефон", val: "+7 (999) 999-99-99" },
+                { icon: "Mail", title: "Email", val: "hello@coffee-uyt.ru" },
+              ].map((item) => (
+                <div key={item.title} className="flex items-start gap-3 p-4 rounded-xl" style={{ background: "white" }}>
+                  <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: "#F5ECD7" }}>
+                    <Icon name={item.icon} size={18} style={{ color: "#C17F4A" }} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wide mb-0.5" style={{ color: "#8B6040" }}>{item.title}</p>
+                    <p className="text-sm font-medium whitespace-pre-line" style={{ color: "#3E1F00" }}>{item.val}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="rounded-2xl flex items-center justify-center" style={{ background: "linear-gradient(135deg, #F5ECD7, #EDD9B8)", minHeight: "280px" }}>
+              <div className="text-center p-8">
+                <div className="text-6xl mb-4">📍</div>
+                <p className="font-bold text-lg mb-1" style={{ color: "#3E1F00", fontFamily: "'Playfair Display', serif" }}>Кофейня Уют</p>
+                <p className="text-sm" style={{ color: "#6B3A2A" }}>ул. Кофейная, 15 · Центр города</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ==================== ФУТЕР ==================== */}
+      <footer className="py-8 px-6 text-center" style={{ background: "#3E1F00" }}>
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <svg width="22" height="22" viewBox="0 0 36 36" fill="none">
+            <circle cx="18" cy="18" r="18" fill="#C17F4A"/>
+            <path d="M10 24 Q14 16 18 20 Q22 24 26 14" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
+          </svg>
+          <span style={{ fontFamily: "'Playfair Display', serif", fontWeight: 700, color: "#FAF4EA", fontSize: "1rem" }}>Уют</span>
+        </div>
+        <p style={{ color: "#8B6040", fontSize: "12px" }}>© 2024 Кофейня Уют. Все права защищены.</p>
       </footer>
+
+      {/* ==================== КОРЗИНА (боковая панель) ==================== */}
+      {cartOpen && (
+        <div className="fixed inset-0 z-50 flex justify-end">
+          {/* Затемнение */}
+          <div className="absolute inset-0" style={{ background: "rgba(62,31,0,0.35)" }} onClick={() => setCartOpen(false)} />
+          {/* Панель */}
+          <div className="relative w-full max-w-sm h-full flex flex-col animate-slide-in-right" style={{ background: "#FAF4EA" }}>
+            {/* Шапка корзины */}
+            <div className="flex items-center justify-between px-6 py-5" style={{ borderBottom: "1px solid #E8D8C0" }}>
+              <h3 className="text-xl font-bold" style={{ fontFamily: "'Playfair Display', serif", color: "#3E1F00" }}>
+                🛒 Корзина
+              </h3>
+              <button onClick={() => setCartOpen(false)} className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "#F5ECD7", color: "#3E1F00" }}>
+                <Icon name="X" size={16} />
+              </button>
+            </div>
+
+            {/* Содержимое */}
+            <div className="flex-1 overflow-y-auto px-6 py-4">
+              {cart.length === 0 ? (
+                <div className="text-center py-16">
+                  <div className="text-5xl mb-4">🛒</div>
+                  <p className="font-medium" style={{ color: "#8B6040" }}>Корзина пуста</p>
+                  <p className="text-sm mt-1" style={{ color: "#A07850" }}>Добавьте что-нибудь из меню</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {cart.map((item) => (
+                    <div key={item.name} className="flex items-center gap-3 p-3 rounded-xl" style={{ background: "white", border: "1px solid #E8D8C0" }}>
+                      <span className="text-2xl">{item.emoji}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold truncate" style={{ color: "#3E1F00" }}>{item.name}</p>
+                        <p className="text-xs" style={{ color: "#C17F4A" }}>{item.price} ₽ × {item.qty}</p>
+                      </div>
+                      <span className="font-bold text-sm" style={{ color: "#3E1F00" }}>{item.price * item.qty} ₽</span>
+                      <button onClick={() => removeFromCart(item.name)} className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: "#F5ECD7", color: "#8B6040" }}>
+                        <Icon name="Trash2" size={13} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Итог и кнопка заказа */}
+            {cart.length > 0 && (
+              <div className="px-6 py-5" style={{ borderTop: "1px solid #E8D8C0" }}>
+                <div className="flex justify-between mb-4">
+                  <span className="font-semibold" style={{ color: "#3E1F00" }}>Итого:</span>
+                  <span className="font-black text-xl" style={{ color: "#C17F4A" }}>{cartTotal} ₽</span>
+                </div>
+                <button
+                  onClick={placeOrder}
+                  className="w-full py-4 rounded-xl font-bold transition-all hover:scale-[1.02] hover:shadow-lg"
+                  style={{ background: "#C17F4A", color: "#FAF4EA" }}
+                >
+                  Оформить заказ
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ==================== УВЕДОМЛЕНИЕ "ЗАКАЗ ПРИНЯТ" ==================== */}
+      {orderDone && (
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 animate-fade-in-up px-6 py-4 rounded-2xl shadow-xl flex items-center gap-3"
+          style={{ background: "#3E1F00", color: "#FAF4EA", minWidth: "280px" }}>
+          <span className="text-2xl">🎉</span>
+          <div>
+            <p className="font-bold text-sm">Заказ успешно оформлен!</p>
+            <p className="text-xs opacity-75">Ждите — скоро будет готово ☕</p>
+          </div>
+        </div>
+      )}
 
       {/* ==================== КНОПКА НАВЕРХ ==================== */}
       {showScrollTop && (
         <button
-          onClick={scrollToTop}
-          className="fixed bottom-8 right-8 w-12 h-12 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 hover:scale-110 animate-scale-in z-50"
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="fixed bottom-8 right-8 w-11 h-11 rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 z-40"
           style={{ background: "#C17F4A", color: "#FAF4EA" }}
-          title="Наверх"
         >
-          <Icon name="ArrowUp" size={20} />
+          <Icon name="ArrowUp" size={18} />
         </button>
       )}
     </div>
